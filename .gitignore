@@ -1,0 +1,67 @@
+### ROOT DIRECTORY ONLY ###
+
+# Gradle (Root)
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+
+# Build & Dev (Root)
+build/
+server/
+
+# IDE & Tooling (Root)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA (Root)
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/misc.xml
+*.iws
+*.iml
+*.ipr
+out/
+
+# VS Code & Env (Root)
+.vscode/
+*.env
+.env
+
+### ALL SUBPROJECTS ###
+
+# Gradle (Subprojects)
+**/.gradle/
+**/gradle/wrapper/gradle-wrapper.jar
+
+# Build outputs (Subprojects)
+**/build/
+**/bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# IDE files (Subprojects)
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.springBeans
+**/.sts4-cache
+
+# IntelliJ (Subprojects)
+**/.idea/compiler.xml
+**/.idea/gradle.xml
+**/.idea/misc.xml
+**/*.iws
+**/*.iml
+**/*.ipr
+**/out/
+
+# VS Code & Env (Subprojects)
+**/.vscode/
+**/*.env
+**/.env
