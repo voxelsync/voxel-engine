@@ -65,3 +65,5 @@ out/
 **/.vscode/
 **/*.env
 **/.env
+.idea/modules.xml
+.idea/vcs.xml

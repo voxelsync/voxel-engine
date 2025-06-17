@@ -9,5 +9,13 @@
  */
 package sync.voxel.api;
 
+import org.bukkit.Material;
+import org.leycm.storage.StorageSection;
+import sync.voxel.api.item.VoMaterial;
+import sync.voxel.api.item.VoRarity;
+
 public interface VoEngine {
+    VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings);
+
+    VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings, VoRarity rarity);
 }

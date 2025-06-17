@@ -6,8 +6,9 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
-dependencies {
 
+dependencies {
+    if (project.name != "api") compileOnly(project(":api"))
     implementation("org.leycm.frames:the-frame:1.3.15")
 
     compileOnly("io.papermc.paper:paper-api:${project.properties["minecraft_version"]}-R0.1-SNAPSHOT")

@@ -15,10 +15,6 @@ subprojects {
             .joinToString("")
     }
 
-    dependencies {
-        if (project.name != "api") compileOnly(project(":api"))
-    }
-
     tasks.named<Jar>("jar") {
         from(configurations.runtimeClasspath.get()
             .map { if (it.isDirectory) it else zipTree(it) })

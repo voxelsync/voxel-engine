@@ -12,4 +12,5 @@ package sync.voxel.paper.item;
 import sync.voxel.api.item.VoItemStack;
 
 public class VoxelItemStack implements VoItemStack {
+
 }

@@ -10,13 +10,18 @@
 package sync.voxel.paper;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.leycm.storage.Storage;
+import org.leycm.storage.impl.JavaStorage;
 import sync.voxel.api.VoxelEngine;
+import sync.voxel.paper.pack.ReloadEngine;
 
 public class PaperPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
         VoxelEngine.register(new PaperEngine());
+        Storage.of("empty", Storage.Type.JSON, true, JavaStorage.class).set("empty", "empty");
+        ReloadEngine.reload();
     }
 
     @Override

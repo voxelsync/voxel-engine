@@ -9,7 +9,23 @@
  */
 package sync.voxel.paper;
 
+import org.bukkit.Material;
+import org.leycm.storage.StorageSection;
 import sync.voxel.api.VoEngine;
+import sync.voxel.api.item.VoMaterial;
+import sync.voxel.api.item.VoRarity;
+import sync.voxel.paper.item.VoxelMaterial;
 
 public class PaperEngine implements VoEngine {
+
+    @Override
+    public VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings) {
+        return new VoxelMaterial(nameSpace, identifier, vaMaterial, settings);
+    }
+
+    @Override
+    public VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings, VoRarity rarity) {
+        return new VoxelMaterial(nameSpace, identifier, vaMaterial, settings, rarity);
+    }
+
 }

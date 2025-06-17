@@ -9,12 +9,24 @@
  */
 package sync.voxel.api;
 
+import org.bukkit.Material;
 import org.jetbrains.annotations.ApiStatus.*;
 import org.jspecify.annotations.NonNull;
+import org.leycm.storage.StorageSection;
+import sync.voxel.api.item.VoMaterial;
+import sync.voxel.api.item.VoRarity;
 
 
 public final class VoxelEngine {
     private static VoEngine engine = null;
+
+    public static VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings, VoRarity rarity) {
+        return engine.registerVoMaterial(nameSpace, identifier, vaMaterial, settings, rarity);
+    }
+
+    public static VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings) {
+        return engine.registerVoMaterial(nameSpace, identifier, vaMaterial, settings);
+    }
 
     private static final class NotLoadedException extends IllegalStateException {
         private static final String MESSAGE = """
