@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.leycm.storage.Storage;
 import org.leycm.storage.impl.JavaStorage;
 import sync.voxel.api.VoxelEngine;
-import sync.voxel.paper.pack.ReloadEngine;
+import sync.voxel.paper.startup.ReloadEngine;
 
 public class PaperPlugin extends JavaPlugin {
 

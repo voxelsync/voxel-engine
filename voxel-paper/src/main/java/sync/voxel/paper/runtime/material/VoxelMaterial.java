@@ -7,15 +7,15 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.paper.material;
+package sync.voxel.paper.runtime.material;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.leycm.storage.StorageSection;
 
-import sync.voxel.api.event.material.RegisterVoMaterialEvent;
-import sync.voxel.api.material.VoMaterial;
-import sync.voxel.api.material.VoRarity;
+import sync.voxel.api.runtime.event.material.RegisterVoMaterialEvent;
+import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.runtime.material.VoRarity;
 
 public class VoxelMaterial implements VoMaterial {
     private final String nameSpace;
@@ -85,112 +85,112 @@ public class VoxelMaterial implements VoMaterial {
 
     @Override
     public boolean isBlock() {
-        return settings.get("type", String.class, vaMaterial.isBlock() ? "block" : "air").equals("block");
+        return settings.get("behavior.type", String.class, vaMaterial.isBlock() ? "block" : "air").equals("block");
     }
 
     @Override
     public boolean isSolidBlock() {
-        return isBlock() && settings.get("block.solid", Boolean.class, vaMaterial.isSolid());
+        return isBlock() && settings.get("behavior.block.solid", Boolean.class, vaMaterial.isSolid());
     }
 
     @Override
     public boolean isOccluding() {
-        return isBlock() && settings.get("block.occluding", Boolean.class, vaMaterial.isOccluding());
+        return isBlock() && settings.get("behavior.block.occluding", Boolean.class, vaMaterial.isOccluding());
     }
 
     @Override
     public boolean isEdible() {
-        return settings.get("edible", Boolean.class, vaMaterial.isEdible());
+        return settings.get("behavior.edible", Boolean.class, vaMaterial.isEdible());
     }
 
     @Override
     public boolean isFlammable() {
-        return settings.get("flammable", Boolean.class, vaMaterial.isFlammable());
+        return settings.get("behavior.flammable", Boolean.class, vaMaterial.isFlammable());
     }
 
     @Override
     public boolean isBurnable() {
-        return settings.get("burnable", Boolean.class, vaMaterial.isBurnable());
+        return settings.get("behavior.burnable", Boolean.class, vaMaterial.isBurnable());
     }
 
     @Override
     public boolean isFuel() {
-        return settings.get("fuel", Boolean.class, vaMaterial.isFuel());
+        return settings.get("behavior.fuel", Boolean.class, vaMaterial.isFuel());
     }
 
     @Override
     public boolean isInteractable() {
-        return settings.get("interactable", Boolean.class, vaMaterial.isInteractable());
+        return settings.get("behavior.interactable", Boolean.class, vaMaterial.isInteractable());
     }
 
     @Override
     public boolean isRecord() {
-        return settings.get("record", Boolean.class, vaMaterial.isRecord());
+        return settings.get("behavior.record", Boolean.class, vaMaterial.isRecord());
     }
 
     @Override
     public boolean hasGravity() {
-        return settings.get("gravity", Boolean.class, vaMaterial.hasGravity());
+        return settings.get("behavior.gravity", Boolean.class, vaMaterial.hasGravity());
     }
 
     @Override
     public float getHardness() {
-        return settings.get("hardness", Float.class, vaMaterial.getHardness());
+        return settings.get("behavior.hardness", Float.class, vaMaterial.getHardness());
     }
 
     @Override
     public float getBlastResistance() {
-        return settings.get("blastResistance", Float.class, vaMaterial.getBlastResistance());
+        return settings.get("behavior.blastResistance", Float.class, vaMaterial.getBlastResistance());
     }
 
     @Override
     public int getMaxStackSize() {
-        return settings.get("maxStackSize", Integer.class, vaMaterial.getMaxStackSize());
+        return settings.get("behavior.maxStackSize", Integer.class, vaMaterial.getMaxStackSize());
     }
 
     @Override
     public short getMaxDurability() {
-        return settings.get("maxDurability", Short.class, vaMaterial.getMaxDurability());
+        return settings.get("behavior.maxDurability", Short.class, vaMaterial.getMaxDurability());
     }
 
     @Override
     public boolean isItem() {
-        return settings.get("material", Boolean.class, vaMaterial.isItem());
+        return settings.get("behavior.material", Boolean.class, vaMaterial.isItem());
     }
 
     @Override
     public boolean isLegacy() {
-        return settings.get("legacy", Boolean.class, vaMaterial.isLegacy());
+        return settings.get("behavior.legacy", Boolean.class, vaMaterial.isLegacy());
     }
 
     @Override
     public String getKey() {
-        return settings.get("key", String.class, vaMaterial.getKey().getKey());
+        return settings.get("behavior.key", String.class, vaMaterial.getKey().getKey());
     }
 
     @Override
     public String name() {
-        return settings.get("name", String.class, vaMaterial.name());
+        return settings.get("behavior.name", String.class, vaMaterial.name());
     }
 
     @Override
     public int ordinal() {
-        return settings.get("ordinal", Integer.class, vaMaterial.ordinal());
+        return settings.get("behavior.ordinal", Integer.class, vaMaterial.ordinal());
     }
 
     @Override
     public boolean isCollidable() {
-        return settings.get("collidable", Boolean.class, vaMaterial.isCollidable());
+        return settings.get("behavior.collidable", Boolean.class, vaMaterial.isCollidable());
     }
 
     @Override
     public float getSlipperiness() {
-        return settings.get("slipperiness", Float.class, vaMaterial.getSlipperiness());
+        return settings.get("behavior.slipperiness", Float.class, vaMaterial.getSlipperiness());
     }
 
     @Override
     public boolean isSolid() {
-        return settings.get("solid", Boolean.class, vaMaterial.isSolid());
+        return settings.get("behavior.solid", Boolean.class, vaMaterial.isSolid());
     }
 
     @Override

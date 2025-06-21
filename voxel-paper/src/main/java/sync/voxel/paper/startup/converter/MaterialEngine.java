@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.paper.pack;
+package sync.voxel.paper.startup.converter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,9 +16,9 @@ import org.leycm.storage.Storage;
 import org.leycm.storage.StorageSection;
 import org.leycm.storage.impl.JavaStorage;
 import sync.voxel.api.VoxelEngine;
-import sync.voxel.api.event.material.AdaptVaMaterialEvent;
-import sync.voxel.api.material.VoMaterial;
-import sync.voxel.api.material.VoRarity;
+import sync.voxel.api.runtime.event.material.AdaptVaMaterialEvent;
+import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.runtime.material.VoRarity;
 
 public class MaterialEngine {
 

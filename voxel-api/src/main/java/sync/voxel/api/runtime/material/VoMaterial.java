@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.material;
+package sync.voxel.api.runtime.material;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +71,13 @@ public interface VoMaterial {
      * @return The VoRarity of this material
      */
     VoRarity rarity();
+
+    /**
+     * Checks if this material is a 3d material.
+     *
+     * @return true if this material is a 3d, false otherwise
+     */
+    boolean has3dModel();
 
     /**
      * Checks if this material is an air block.

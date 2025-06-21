@@ -1,4 +1,4 @@
-package sync.voxel.paper.item;
+package sync.voxel.paper.runtime.item;
 
 import com.google.common.collect.Multimap;
 import net.kyori.adventure.text.Component;
@@ -16,9 +16,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import sync.voxel.api.item.VoItemCreateReason;
-import sync.voxel.api.item.VoItemStack;
-import sync.voxel.api.material.VoMaterial;
+import sync.voxel.api.runtime.item.VoItemCreateReason;
+import sync.voxel.api.runtime.item.VoItemStack;
+import sync.voxel.api.runtime.material.VoMaterial;
 
 import java.time.LocalDateTime;
 import java.util.*;

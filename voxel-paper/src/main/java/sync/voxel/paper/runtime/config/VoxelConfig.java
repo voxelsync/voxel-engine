@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.config;
+package sync.voxel.paper.runtime.config;
 
-public interface VoConfig {
+public class VoxelConfig {
 }

@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.material;
+package sync.voxel.api.runtime.material;
 
 import lombok.Getter;
 import net.kyori.adventure.text.format.TextColor;

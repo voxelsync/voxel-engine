@@ -14,10 +14,10 @@ import org.jetbrains.annotations.ApiStatus.*;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.leycm.storage.StorageSection;
-import sync.voxel.api.item.VoItemCreateReason;
-import sync.voxel.api.item.VoItemStack;
-import sync.voxel.api.material.VoMaterial;
-import sync.voxel.api.material.VoRarity;
+import sync.voxel.api.runtime.item.VoItemCreateReason;
+import sync.voxel.api.runtime.item.VoItemStack;
+import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.runtime.material.VoRarity;
 
 
 public final class VoxelEngine {

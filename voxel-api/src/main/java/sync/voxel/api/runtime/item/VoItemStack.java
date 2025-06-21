@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.item;
+package sync.voxel.api.runtime.item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sync.voxel.api.VoxelEngine;
-import sync.voxel.api.material.VoMaterial;
+import sync.voxel.api.runtime.material.VoMaterial;
 
 /**
  * Represents a Voxel item stack with extended functionality including persistent data storage.

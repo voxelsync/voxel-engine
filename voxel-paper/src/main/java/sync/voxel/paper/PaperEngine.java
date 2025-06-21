@@ -13,12 +13,12 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.leycm.storage.StorageSection;
 import sync.voxel.api.VoEngine;
-import sync.voxel.api.item.VoItemCreateReason;
-import sync.voxel.api.item.VoItemStack;
-import sync.voxel.api.material.VoMaterial;
-import sync.voxel.api.material.VoRarity;
-import sync.voxel.paper.item.VoxelItemStack;
-import sync.voxel.paper.material.VoxelMaterial;
+import sync.voxel.api.runtime.item.VoItemCreateReason;
+import sync.voxel.api.runtime.item.VoItemStack;
+import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.runtime.material.VoRarity;
+import sync.voxel.paper.runtime.item.VoxelItemStack;
+import sync.voxel.paper.runtime.material.VoxelMaterial;
 
 public class PaperEngine implements VoEngine {
 

@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.event.item;
+package sync.voxel.api.runtime.event.item;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import sync.voxel.api.material.VoMaterial;
+import sync.voxel.api.runtime.material.VoMaterial;
 
 /**
  * Called when a VoItemStack is being created.
