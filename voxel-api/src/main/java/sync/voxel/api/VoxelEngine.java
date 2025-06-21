@@ -10,14 +10,15 @@
 package sync.voxel.api;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus.*;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.leycm.storage.StorageSection;
-import sync.voxel.api.runtime.item.VoItemCreateReason;
+import sync.voxel.api.runtime.item.VoCreateReason;
 import sync.voxel.api.runtime.item.VoItemStack;
-import sync.voxel.api.runtime.material.VoMaterial;
-import sync.voxel.api.runtime.material.VoRarity;
+import sync.voxel.api.startup.material.VoMaterial;
+import sync.voxel.api.startup.material.VoRarity;
 
 
 public final class VoxelEngine {
@@ -31,8 +32,12 @@ public final class VoxelEngine {
         return engine.registerVoMaterial(nameSpace, identifier, vaMaterial, settings);
     }
 
-    public static VoItemStack registerVoItemStack(@NotNull VoMaterial voMaterial, int amount, VoItemCreateReason reason) {
+    public static VoItemStack registerVoItemStack(@NotNull VoMaterial voMaterial, int amount, VoCreateReason reason) {
         return engine.registerVoItemStack(voMaterial, amount, reason);
+    }
+
+    public static VoItemStack registerVoItemStack(ItemStack stack, VoCreateReason reason) {
+        return engine.registerVoItemStack(stack, reason);
     }
 
     private static final class NotLoadedException extends IllegalStateException {

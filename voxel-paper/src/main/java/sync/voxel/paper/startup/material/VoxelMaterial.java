@@ -7,15 +7,15 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.paper.runtime.material;
+package sync.voxel.paper.startup.material;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.leycm.storage.StorageSection;
 
 import sync.voxel.api.runtime.event.material.RegisterVoMaterialEvent;
-import sync.voxel.api.runtime.material.VoMaterial;
-import sync.voxel.api.runtime.material.VoRarity;
+import sync.voxel.api.startup.material.VoMaterial;
+import sync.voxel.api.startup.material.VoRarity;
 
 public class VoxelMaterial implements VoMaterial {
     private final String nameSpace;

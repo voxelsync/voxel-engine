@@ -16,9 +16,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import sync.voxel.api.runtime.item.VoItemCreateReason;
+import sync.voxel.api.runtime.item.VoCreateReason;
 import sync.voxel.api.runtime.item.VoItemStack;
-import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.startup.material.VoMaterial;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,33 +30,37 @@ public class VoxelItemStack implements VoItemStack {
     private ItemMeta meta;
 
     public VoxelItemStack(@NotNull VoMaterial voMaterial, int amount) {
-        this.namespace = voMaterial.nameSpace();
-
-        this.stack = new ItemStack(voMaterial.vaMaterial(), amount);
-        this.meta = stack.getItemMeta();
-
-        setPersistentData("voxel-meta", "uuid", PersistentDataType.STRING, UUID.randomUUID().toString());
-
-        setPersistentData("voxel-meta", "create.timestamp", PersistentDataType.STRING, LocalDateTime.now().toString());
-        setPersistentData("voxel-meta", "create.reason", PersistentDataType.STRING, VoItemCreateReason.CUSTOM.toString());
-
-        setPersistentData("voxel-meta", "material", PersistentDataType.STRING,
-                voMaterial.nameSpace() + ":" + voMaterial.identifier());
+        this(voMaterial, amount, VoCreateReason.CUSTOM);
     }
 
-    public VoxelItemStack(@NotNull VoMaterial voMaterial, int amount, VoItemCreateReason reason) {
+    public VoxelItemStack(@NotNull VoMaterial voMaterial, int amount, VoCreateReason reason) {
         this.namespace = voMaterial.nameSpace();
 
         this.stack = new ItemStack(voMaterial.vaMaterial(), amount);
         this.meta = stack.getItemMeta();
 
-        setPersistentData("voxel-meta", "uuid", PersistentDataType.STRING, UUID.randomUUID().toString());
+        if (!hasPersistentData("voxel-meta", "uuid")) {
+            setPersistentData("voxel-meta", "uuid", PersistentDataType.STRING, UUID.randomUUID().toString());
+            setPersistentData("voxel-meta", "create.timestamp", PersistentDataType.STRING, LocalDateTime.now().toString());
+            setPersistentData("voxel-meta", "create.reason", PersistentDataType.STRING, reason);
+            setPersistentData("voxel-meta", "material", PersistentDataType.STRING,
+                    voMaterial.nameSpace() + ":" + voMaterial.identifier());
+        }
+    }
 
-        setPersistentData("voxel-meta", "create.timestamp", PersistentDataType.STRING, LocalDateTime.now().toString());
-        setPersistentData("voxel-meta", "create.reason", PersistentDataType.STRING, reason);
+    public VoxelItemStack(@NotNull ItemStack stack, VoCreateReason reason) {
+        this.namespace = VoMaterial.valueOf(stack.getType()).nameSpace();
 
-        setPersistentData("voxel-meta", "material", PersistentDataType.STRING,
-                voMaterial.nameSpace() + ":" + voMaterial.identifier());
+        this.stack = stack;
+        this.meta = stack.getItemMeta();
+
+        if (!hasPersistentData("voxel-meta", "uuid")) {
+            setPersistentData("voxel-meta", "uuid", PersistentDataType.STRING, UUID.randomUUID().toString());
+            setPersistentData("voxel-meta", "create.timestamp", PersistentDataType.STRING, LocalDateTime.now().toString());
+            setPersistentData("voxel-meta", "create.reason", PersistentDataType.STRING, reason);
+            setPersistentData("voxel-meta", "material", PersistentDataType.STRING,
+                    stack.getType().getKey().toString());
+        }
     }
 
     @Override

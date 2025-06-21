@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.leycm.storage.StorageSection;
-import sync.voxel.api.runtime.material.VoRarity;
+import sync.voxel.api.startup.material.VoRarity;
 
 /**
  * An event that is fired when a custom Voxel material is being registered.

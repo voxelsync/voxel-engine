@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.startup.material.VoMaterial;
 
 /**
  * Called when a VoItemStack is being created.

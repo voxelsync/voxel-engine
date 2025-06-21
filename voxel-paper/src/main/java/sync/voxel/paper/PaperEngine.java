@@ -10,15 +10,16 @@
 package sync.voxel.paper;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.leycm.storage.StorageSection;
 import sync.voxel.api.VoEngine;
-import sync.voxel.api.runtime.item.VoItemCreateReason;
+import sync.voxel.api.runtime.item.VoCreateReason;
 import sync.voxel.api.runtime.item.VoItemStack;
-import sync.voxel.api.runtime.material.VoMaterial;
-import sync.voxel.api.runtime.material.VoRarity;
+import sync.voxel.api.startup.material.VoMaterial;
+import sync.voxel.api.startup.material.VoRarity;
 import sync.voxel.paper.runtime.item.VoxelItemStack;
-import sync.voxel.paper.runtime.material.VoxelMaterial;
+import sync.voxel.paper.startup.material.VoxelMaterial;
 
 public class PaperEngine implements VoEngine {
 
@@ -33,8 +34,13 @@ public class PaperEngine implements VoEngine {
     }
 
     @Override
-    public VoItemStack registerVoItemStack(@NotNull VoMaterial voMaterial, int amount, VoItemCreateReason reason) {
+    public VoItemStack registerVoItemStack(@NotNull VoMaterial voMaterial, int amount, VoCreateReason reason) {
         return new VoxelItemStack(voMaterial, amount, reason);
+    }
+
+    @Override
+    public VoItemStack registerVoItemStack(ItemStack stack, VoCreateReason reason) {
+        return new VoxelItemStack(stack, reason);
     }
 
 }

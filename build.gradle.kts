@@ -62,7 +62,7 @@ subprojects {
             println(jarFile.path.toString())
 
             val targetDir = file("${rootProject.rootDir}/out/${project.name}/")
-            val targetName = "voxel-${project.name}-v${rootProject.version}#${generateSuffix()}.jar"
+            val targetName = "voxel-engine-${project.name}-v${rootProject.version}#${generateSuffix()}.jar"
 
             if (!targetDir.exists()) {
                 targetDir.mkdirs()

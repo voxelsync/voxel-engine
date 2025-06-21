@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sync.voxel.api.VoxelEngine;
-import sync.voxel.api.runtime.material.VoMaterial;
+import sync.voxel.api.startup.material.VoMaterial;
 
 /**
  * Represents a Voxel item stack with extended functionality including persistent data storage.
@@ -40,7 +40,7 @@ public interface VoItemStack {
      * @return a new Voxel item stack
      */
     static @NotNull VoItemStack of(Material material) {
-        return of(VoMaterial.valueOf(material), 1, VoItemCreateReason.CUSTOM);
+        return of(VoMaterial.valueOf(material), 1, VoCreateReason.CUSTOM);
     }
 
     /**
@@ -50,7 +50,7 @@ public interface VoItemStack {
      * @param reason the reason for item creation
      * @return a new Voxel item stack
      */
-    static @NotNull VoItemStack of(Material material, VoItemCreateReason reason) {
+    static @NotNull VoItemStack of(Material material, VoCreateReason reason) {
         return of(VoMaterial.valueOf(material), 1, reason);
     }
 
@@ -62,7 +62,7 @@ public interface VoItemStack {
      */
     @Contract(pure = true)
     static @NotNull VoItemStack of(VoMaterial voMaterial) {
-        return of(voMaterial, 1, VoItemCreateReason.CUSTOM);
+        return of(voMaterial, 1, VoCreateReason.CUSTOM);
     }
 
     /**
@@ -73,7 +73,7 @@ public interface VoItemStack {
      * @return a new Voxel item stack
      */
     @Contract(pure = true)
-    static @NotNull VoItemStack of(VoMaterial voMaterial, VoItemCreateReason reason) {
+    static @NotNull VoItemStack of(VoMaterial voMaterial, VoCreateReason reason) {
         return of(voMaterial, 1, reason);
     }
 
@@ -85,7 +85,7 @@ public interface VoItemStack {
      * @return a new Voxel item stack
      */
     static @NotNull VoItemStack of(Material material, int amount) {
-        return of(VoMaterial.valueOf(material), amount, VoItemCreateReason.CUSTOM);
+        return of(VoMaterial.valueOf(material), amount, VoCreateReason.CUSTOM);
     }
 
     /**
@@ -96,7 +96,7 @@ public interface VoItemStack {
      * @param reason the reason for item creation
      * @return a new Voxel item stack
      */
-    static @NotNull VoItemStack of(Material material, int amount, VoItemCreateReason reason) {
+    static @NotNull VoItemStack of(Material material, int amount, VoCreateReason reason) {
         return of(VoMaterial.valueOf(material), amount, reason);
     }
 
@@ -109,7 +109,7 @@ public interface VoItemStack {
      */
     @Contract(pure = true)
     static @NotNull VoItemStack of(@NotNull VoMaterial voMaterial, int amount) {
-        return of(voMaterial, amount, VoItemCreateReason.CUSTOM);
+        return of(voMaterial, amount, VoCreateReason.CUSTOM);
     }
 
     /**
@@ -120,9 +120,20 @@ public interface VoItemStack {
      * @param reason the reason for item creation
      * @return a new Voxel item stack
      */
-    static VoItemStack of(@NotNull VoMaterial voMaterial, int amount, VoItemCreateReason reason) {
+    static VoItemStack of(@NotNull VoMaterial voMaterial, int amount, VoCreateReason reason) {
         if (amount <= 0) throw new RuntimeException("An ItemStack can not have an amount 0 or lower");
         return VoxelEngine.registerVoItemStack(voMaterial, amount, reason);
+    }
+
+    /**
+     * Creates a new Voxel item stack with specified amount and creation reason.
+     *
+     * @param stack vaItemStack for
+     * @param reason the reason for item creation
+     * @return a new Voxel item stack
+     */
+    static VoItemStack of(ItemStack stack, VoCreateReason reason) {
+        return VoxelEngine.registerVoItemStack(stack, reason);
     }
 
     /**

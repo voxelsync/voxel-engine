@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.runtime.material;
+package sync.voxel.api.startup.material;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;

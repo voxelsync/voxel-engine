@@ -17,8 +17,8 @@ import org.leycm.storage.StorageSection;
 import org.leycm.storage.impl.JavaStorage;
 import sync.voxel.api.VoxelEngine;
 import sync.voxel.api.runtime.event.material.AdaptVaMaterialEvent;
-import sync.voxel.api.runtime.material.VoMaterial;
-import sync.voxel.api.runtime.material.VoRarity;
+import sync.voxel.api.startup.material.VoMaterial;
+import sync.voxel.api.startup.material.VoRarity;
 
 public class MaterialEngine {
 
