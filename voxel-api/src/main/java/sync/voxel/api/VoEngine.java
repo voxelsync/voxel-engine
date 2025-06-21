@@ -20,11 +20,4 @@ import sync.voxel.api.startup.material.VoMaterial;
 import sync.voxel.api.startup.material.VoRarity;
 
 public interface VoEngine {
-    VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings);
-
-    VoMaterial registerVoMaterial(String nameSpace, String identifier, Material vaMaterial, StorageSection settings, VoRarity rarity);
-
-    VoItemStack registerVoItemStack(@NotNull VoMaterial voMaterial, int amount, VoCreateReason reason);
-
-    VoItemStack registerVoItemStack(ItemStack stack, VoCreateReason reason);
 }
