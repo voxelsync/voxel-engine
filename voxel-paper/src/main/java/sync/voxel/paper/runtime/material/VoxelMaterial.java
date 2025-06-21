@@ -74,6 +74,11 @@ public class VoxelMaterial implements VoMaterial {
     }
 
     @Override
+    public boolean has3dModel() {
+        return settings.get("texture.type", String.class, "texture").equals("model");
+    }
+
+    @Override
     public boolean isAir() {
         return vaMaterial() == Material.AIR || vaMaterial() == Material.CAVE_AIR || vaMaterial() == Material.VOID_AIR;
     }
