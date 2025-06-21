@@ -4,6 +4,8 @@ plugins {
     java
 }
 
+rootProject.version = "1.0.1"
+
 subprojects {
     apply(plugin = "java")
 
@@ -13,10 +15,6 @@ subprojects {
         return (1..6)
             .map { chars[random.nextInt(chars.length)] }
             .joinToString("")
-    }
-
-    dependencies {
-        if (project.name != "api") compileOnly(project(":api"))
     }
 
     tasks.named<Jar>("jar") {
@@ -40,7 +38,7 @@ subprojects {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
         filter { line ->
-            line.replace("\${version}", project.version.toString())
+            line.replace("\${version}", rootProject.version.toString())
                 .replace("\${group}", project.group.toString())
                 .replace("\${name}", project.name)
         }
@@ -48,7 +46,7 @@ subprojects {
 
         include("**/*.yml", "**/*.txt", "**/*.properties", "**/*.json")
         expand(
-            "version" to project.version,
+            "version" to rootProject.version,
             "group" to project.group,
             "name" to project.name,
         )
@@ -64,7 +62,7 @@ subprojects {
             println(jarFile.path.toString())
 
             val targetDir = file("${rootProject.rootDir}/out/${project.name}/")
-            val targetName = "${project.name}-v${project.version}#${generateSuffix()}.jar"
+            val targetName = "voxel-engine-${project.name}-v${rootProject.version}#${generateSuffix()}.jar"
 
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
@@ -76,6 +74,7 @@ subprojects {
                 rename { targetName }
             }
 
+            delete(layout.buildDirectory)
         }
 
         group = "deployment"
