@@ -24,7 +24,7 @@ public class EnchantSubCommand extends SubCommand {
                     sender.sendMessage(prefix + "§cYou have to specify a Enchantment <- exception in argument 1");
                     return;
                 }
-                VoEnchantment.valueOf()
+                VoEnchantment.valueOf(args[1]);
 
         }
     }
