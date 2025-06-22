@@ -50,4 +50,12 @@ public class PaperPlugin extends JavaPlugin {
         VoxelEngine.unregister();
     }
 
+    public static Integer getInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return null; // Falls die Eingabe ungültig ist
+        }
+    }
+
 }
