@@ -20,7 +20,7 @@ public final class VoxelEnchantManager {
 
     public static final VoxelEnchantManager voxEnchantManager = new VoxelEnchantManager();
 
-    public void addEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant, Integer level) {
+    public ItemStack addEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant, Integer level) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         lores.removeIf(lore -> lore.startsWith(ChatColor.GRAY + "%voxelenchant:" + enchant.getKey().toString() + "%"));
@@ -29,9 +29,10 @@ public final class VoxelEnchantManager {
         meta.setLore(lores);
         meta.setEnchantmentGlintOverride(true);
         item.setItemMeta(meta);
+        return item;
     }
 
-    public void removeEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant) {
+    public ItemStack removeEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         lores.removeIf(lore -> lore.startsWith(ChatColor.GRAY + "%voxelenchant:" + enchant.getKey().toString() + "%"));
@@ -41,6 +42,7 @@ public final class VoxelEnchantManager {
         }
         meta.setLore(lores);
         item.setItemMeta(meta);
+        return item;
     }
 
     public boolean hasEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant) {

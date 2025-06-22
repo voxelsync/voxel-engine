@@ -9,6 +9,8 @@
  */
 package sync.voxel.paper;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.leycm.storage.Storage;
@@ -24,6 +26,7 @@ import sync.voxel.paper.runtime.material.VoxelMaterial;
 public class PaperPlugin extends JavaPlugin {
 
     public static PaperPlugin plugin;
+    public static Component prefix = Component.text("V").color(TextColor.color(0xff0241)).append(Component.text("E").color(TextColor.color(0x00244f)).append(Component.text(" »").color(TextColor.color(0x555555)))) ;
 
     @Override
     public void onEnable() {
