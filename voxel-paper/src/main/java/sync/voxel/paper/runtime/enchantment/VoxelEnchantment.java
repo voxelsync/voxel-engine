@@ -8,11 +8,41 @@ import sync.voxel.api.enchantment.VoEnchantment;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class VoxelEnchantment implements VoEnchantment {
 
     private final VoKey key;
     private final Map<String, Object> nbt = new HashMap<>();
+
+    public static Set<VoEnchantment> values() {
+        return enchantments;
+    }
+
+    public static VoEnchantment valueOf(String nameSpace, String identifier) {
+        return enchantments.stream()
+                .filter(e -> e.getKey().toString().equals(nameSpace + ":" + identifier))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static VoEnchantment valueOf(String s) {
+        return enchantments.stream()
+                .filter(e -> e.getKey().toString().equals(s))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static VoEnchantment valueOf(VoKey key) {
+        return enchantments.stream()
+                .filter(e -> e.getKey().toString().equals(key.toString()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static VoEnchantment valueOf(@NotNull Enchantment vaEnchantment) {
+        return valueOf(vaEnchantment.getKey().toString());
+    }
 
     @Contract(value = "_ -> new", pure = true)
     public static @NotNull VoEnchantment forkEnchantment(VoKey key) {

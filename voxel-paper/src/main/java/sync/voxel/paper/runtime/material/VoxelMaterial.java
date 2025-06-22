@@ -10,6 +10,7 @@
 package sync.voxel.paper.runtime.material;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.common.VoKey;
@@ -18,6 +19,7 @@ import sync.voxel.api.material.VoMaterial;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class VoxelMaterial implements VoMaterial {
 
@@ -25,6 +27,35 @@ public class VoxelMaterial implements VoMaterial {
     private final VoKey key;
     private final VoRenderType renderType;
     private final Map<String, Object> nbt = new HashMap<>();
+
+    public static Set<VoMaterial> values() {
+        return materials;
+    }
+
+    public static VoMaterial valueOf(String nameSpace, String identifier) {
+        return materials.stream()
+                .filter(m -> m.getKey().toString().equals(nameSpace + ":" + identifier))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static VoMaterial valueOf(String s) {
+        return materials.stream()
+                .filter(m -> m.getKey().toString().equals(s))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static VoMaterial valueOf(VoKey key) {
+        return materials.stream()
+                .filter(m -> m.getKey().toString().equals(key.toString()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static VoMaterial valueOf(@NotNull Material vaMaterial) {
+        return valueOf(vaMaterial.getKey().toString());
+    }
 
     @Contract(value = "_, _, _ -> new", pure = true)
     public static @NotNull VoxelMaterial forkMaterial(Material vaMaterial, VoKey key, VoRenderType renderType) {
