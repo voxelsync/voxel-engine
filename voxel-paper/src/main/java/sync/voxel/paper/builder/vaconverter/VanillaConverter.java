@@ -14,7 +14,7 @@ public class VaConverter {
 
     public static void convertEnchants() {
         for (Material material : Material.values()) {
-
+            VoMaterial voMaterial = VoxelMaterial.forkMaterial(material, VoKey.of(material.getKey()), VoRenderType.NONE);
         }
     }
 
