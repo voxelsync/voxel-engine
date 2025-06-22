@@ -66,6 +66,10 @@ public record VoKey(String namespace, String identifier) {
         return namespace + ":" + identifier;
     }
 
+    public @NotNull String toString(char separator) {
+        return namespace + separator + identifier;
+    }
+
     /**
      * Validates a namespace string.
      *

@@ -16,8 +16,11 @@ import sync.voxel.api.VoxelEngine;
 
 public class PaperPlugin extends JavaPlugin {
 
+    public static PaperPlugin plugin;
+
     @Override
     public void onEnable() {
+        PaperPlugin.plugin = this;
         VoxelEngine.register(new PaperEngine());
         Storage.of("empty", Storage.Type.JSON, true, JavaStorage.class).set("empty", "empty");
     }
