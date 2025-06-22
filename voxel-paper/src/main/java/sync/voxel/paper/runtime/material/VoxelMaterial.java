@@ -66,6 +66,7 @@ public class VoxelMaterial implements VoMaterial {
         this.renderType = renderType;
         this.vaMaterial = vaMaterial;
         this.key = key;
+        materials.add(this);
     }
 
     @Override

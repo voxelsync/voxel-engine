@@ -1,10 +1,9 @@
 package sync.voxel.paper.runtime.world;
 
-import io.papermc.paper.entity.TeleportFlag;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -12,30 +11,39 @@ import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import sync.voxel.api.material.VoMaterial;
 
 @Getter @Setter
 public class VoxelBlock {
-    private final Location location;
+    private Location location;
     private final ItemDisplay display; // use item for custom model data
     private final ItemStack stack;
     private int[] offset = new int[]{0, 0, 0};
 
     public VoxelBlock(@NotNull Location location, ItemStack stack) {
+        location.setPitch(0);
+        location.setYaw(0);
+
         this.location = location;
+        this.offset = getBestOffset(null);
         this.stack = stack;
-        this.display = location.getWorld().spawn(location, ItemDisplay.class, i -> updateBlock(location));
+        this.display = location.getWorld().spawn(location, ItemDisplay.class, i -> updateDisplay(i, null));
+
+        VoxelWorld.addVoxelBlock(location, this);
     }
 
-    public void updateBlock(Location updateLoc) {
-        offset = getBestOffset();
+    public void updateBlock(Location airLoc) {
+        updateDisplay(display, airLoc);
+    }
+
+    public void updateDisplay(@NotNull ItemDisplay display, Location airLoc) {
+        offset = getBestOffset(airLoc);
         display.setItemStack(stack);
         display.teleport(location.clone().add(offset[0], offset[1], offset[2]), PlayerTeleportEvent.TeleportCause.EXIT_BED);
         display.setTransformation(new Transformation(
-                new Vector3f(-offset[0], -offset[1], -offset[2]),
-                new Quaternionf(),
-                new Vector3f(1, 1, 1),
-                new Quaternionf()
+                new Vector3f(-offset[0] + 0.5f, -offset[1] + 0.5f, -offset[2] + 0.5f),
+                new Quaternionf(0, 0, 0, 1),
+                new Vector3f(1.0001f, 1.0001f, 1.0001f),
+                new Quaternionf(0, 0, 0, 1)
         ));
     }
 
@@ -43,14 +51,21 @@ public class VoxelBlock {
 
     }
 
-    private int @NotNull [] getBestOffset() {
+    public void moveBlock(@NotNull Location location) {
+        location.setPitch(90F);
+        this.location = location;
+        updateBlock(null);
+    }
+
+    private int @NotNull [] getBestOffset(Location airLoc) {
         Location base = location.toBlockLocation();
         int[][] offsets = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1},
                 {-1, 0, 0}, {0, -1, 0}, {0, 0, -1}};
 
         for (int[] offset : offsets) {
             Location neighbor = base.clone().add(offset[0], offset[1], offset[2]);
-            if (!neighbor.getWorld().getBlockAt(neighbor).getType().isSolid()) return offset;
+            if (airLoc != null && airLoc.equals(neighbor)) return offset;
+            if (!neighbor.getWorld().getBlockAt(neighbor).getType().isOccluding()) return offset;
         }
 
         return new int[]{0, 0, 0};

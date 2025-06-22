@@ -7,5 +7,6 @@ public enum VoRenderType {
     BLOCK_TEXTURE_ID,
     ARMOR_COLOR,
     ARMOR_MODEL, // only head and body support
-    TRIDENT;
+    TRIDENT,
+    NONE;
 }

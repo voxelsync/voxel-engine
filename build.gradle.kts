@@ -18,6 +18,9 @@ subprojects {
     }
 
     tasks.named<Jar>("jar") {
+
+        archiveFileName.set("voxel-dev.jar")
+
         from(configurations.runtimeClasspath.get()
             .map { if (it.isDirectory) it else zipTree(it) })
 

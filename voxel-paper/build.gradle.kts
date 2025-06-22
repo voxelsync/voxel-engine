@@ -8,7 +8,7 @@ repositories {
 
 
 dependencies {
-    if (project.name != "api") compileOnly(project(":api"))
+    if (project.name != "api") implementation(project(":api"))
     implementation("org.leycm.frames:the-frame:1.3.15")
 
     compileOnly("io.papermc.paper:paper-api:${project.properties["minecraft_version"]}-R0.1-SNAPSHOT")

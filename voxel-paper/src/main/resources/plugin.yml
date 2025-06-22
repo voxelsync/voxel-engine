@@ -1,7 +1,9 @@
 #file: noinspection YAMLSchemaValidation
 name: VoxelEngine
-version: '{version}'
+version: '${version}'
 main: sync.voxel.paper.PaperPlugin
 api-version: '1.21'
 prefix: Voxel
 authors: [ VoxelSync ]
+commands:
+  test:
