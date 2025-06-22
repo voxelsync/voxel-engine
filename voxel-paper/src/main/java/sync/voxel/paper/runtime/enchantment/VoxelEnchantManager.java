@@ -1,23 +1,26 @@
 package sync.voxel.paper.runtime.enchantment;
 
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.enchantment.VoEnchantment;
 
-import javax.crypto.KEM;
 import java.util.List;
 
 public final class VoxelEnchantManager {
 
     public static final VoxelEnchantManager voxEnchantManager = new VoxelEnchantManager();
 
-    public void addEnchant(ItemStack item, VoEnchantment enchant, Integer level) {
+    public void addEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant, Integer level) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         lores.removeIf(lore -> lore.startsWith(ChatColor.GRAY + "%voxelenchant:" + enchant.getKey().toString() + "%"));
@@ -28,7 +31,7 @@ public final class VoxelEnchantManager {
         item.setItemMeta(meta);
     }
 
-    public void removeEnchant(ItemStack item, VoEnchantment enchant) {
+    public void removeEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant) {
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();
         lores.removeIf(lore -> lore.startsWith(ChatColor.GRAY + "%voxelenchant:" + enchant.getKey().toString() + "%"));
@@ -40,7 +43,7 @@ public final class VoxelEnchantManager {
         item.setItemMeta(meta);
     }
 
-    public boolean hasEnchant(ItemStack item, VoEnchantment enchant) {
+    public boolean hasEnchant(@NotNull ItemStack item, @NotNull VoEnchantment enchant) {
         return item.getItemMeta().getPersistentDataContainer().has(new NamespacedKey("voxelenchant", enchant.getKey().toString('/')));
     }
     public Integer getEnchantLevel(ItemStack item, VoEnchantment enchant) {
@@ -59,11 +62,12 @@ public final class VoxelEnchantManager {
         return false;
     }
 
-    public ItemStack updateItem(ItemStack item) {
+    @Contract("_ -> param1")
+    public @NotNull ItemStack updateItem(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
-        for (@NotNull Enchantment value : Enchantment.values()) {
+        for (@NotNull Enchantment value : RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)) {
             if (meta.hasEnchant(value)) {
                 addEnchant(item, VoxelEnchantment.valueOf(value), meta.getEnchantLevel(value));
             }

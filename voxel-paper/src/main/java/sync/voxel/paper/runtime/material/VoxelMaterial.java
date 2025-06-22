@@ -10,7 +10,6 @@
 package sync.voxel.paper.runtime.material;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.common.VoKey;
