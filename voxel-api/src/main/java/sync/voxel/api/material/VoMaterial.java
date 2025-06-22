@@ -12,6 +12,7 @@ package sync.voxel.api.material;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.common.VoKey;
+import sync.voxel.api.common.VoRenderType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -90,6 +91,12 @@ public interface VoMaterial {
     // TODO : add docs
     Material getVaMaterial();
 
+    // TODO : add docs
+    int getTextureIdentifier();
+
+    // TODO : add docs
+    VoRenderType getRenderType();
+
     /**
      * Gets a specific setting value from this material's configuration.
      *
@@ -99,6 +106,6 @@ public interface VoMaterial {
      * @param <T> The type of the setting value
      * @return The setting value or defaultValue if not found
      */
-    <T> T getSetting(String key, Class<T> type, T defaultValue);
+    <T> T getAttribute(String key, Class<T> type, T defaultValue);
 
 }

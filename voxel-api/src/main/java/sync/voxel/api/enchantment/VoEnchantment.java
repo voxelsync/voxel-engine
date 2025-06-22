@@ -87,7 +87,7 @@ public interface VoEnchantment {
     VoKey getKey();
     
     // TODO : add docs
-    int getTextureIdentifer();
+    int getTextureIdentifier();
 
 
     /**
@@ -99,6 +99,6 @@ public interface VoEnchantment {
      * @param <T> The type of the setting value
      * @return The setting value or defaultValue if not found
      */
-    <T> T getSetting(String key, Class<T> type, T defaultValue);
+    <T> T getAttribute(String key, Class<T> type, T defaultValue);
 
 }
