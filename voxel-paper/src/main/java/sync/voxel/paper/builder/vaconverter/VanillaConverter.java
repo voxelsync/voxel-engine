@@ -19,7 +19,7 @@ public class VanillaConverter {
     }
 
     private static void convertEnchants() {
-        for (Enchantment enchantment : RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT)) {
+        for (Enchantment enchantment : Enchantment.values()) {
             VoEnchantment voEnchantment = VoxelEnchantment.forkEnchantment(VoKey.of(enchantment.getKey().toString()));
         }
     }

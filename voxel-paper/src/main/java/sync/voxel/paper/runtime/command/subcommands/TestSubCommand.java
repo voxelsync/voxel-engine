@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.paper.runtime.command.SubCommand;
+import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
 
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ public class TestSubCommand extends SubCommand {
         registerAction("explode", player -> {
             player.getWorld().createExplosion(player.getLocation(), 2.0f, false);
             player.sendMessage("§cBoom!");
+        });
+        registerAction("listenchants", player -> {
+            player.sendMessage("Size:" + VoxelEnchantment.values().size());
+            VoxelEnchantment.values().forEach(enchant -> player.sendMessage(enchant.getKey().toString()));
         });
     }
 
@@ -84,7 +89,13 @@ public class TestSubCommand extends SubCommand {
 
     @Override
     public List<String> getTabCompleter(String[] args, CommandSender sender, Command command) {
-        return new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        if (args.length == 1) {
+            for (String string : actions.keySet()) {
+                list.add(string);
+            }
+        }
+        return list;
     }
 
 }

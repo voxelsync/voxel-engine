@@ -72,6 +72,7 @@ public class VoxelEnchantment implements VoEnchantment {
 
     public VoxelEnchantment(VoKey key) {
         this.key = key;
+        enchantments.add(this);
     }
 
     @Override
