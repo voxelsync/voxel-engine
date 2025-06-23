@@ -25,8 +25,8 @@ public class VoxelWorld {
         return voxelBlocks.remove(block.getLocation());
     }
 
-    public static VoxelBlock addVoxelBlock(Location location, VoxelBlock block) {
-        return voxelBlocks.put(location, block);
+    public static void addVoxelBlock(Location location, VoxelBlock block) {
+        voxelBlocks.put(location, block);
     }
 
 }

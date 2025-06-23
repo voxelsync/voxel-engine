@@ -2,6 +2,9 @@ package sync.voxel.paper.runtime.behavior;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -10,6 +13,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.material.VoMaterial;
 import sync.voxel.paper.PaperPlugin;
@@ -17,9 +21,15 @@ import sync.voxel.paper.runtime.material.VoxelMaterial;
 import sync.voxel.paper.runtime.world.VoxelBlock;
 import sync.voxel.paper.runtime.world.VoxelWorld;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public final class BlockBehavior implements Listener {
 
     private static BlockBehavior blockBehavior;
+    private static final Map<UUID, Long> placementCooldowns = new HashMap<>();
+    private static final long COOLDOWN = 100;
 
     public static void register() {
         if (blockBehavior == null) BlockBehavior.blockBehavior = new BlockBehavior();
@@ -32,48 +42,144 @@ public final class BlockBehavior implements Listener {
     }
 
     @EventHandler
+    public void onBlockPlace(@NotNull BlockPlaceEvent event) {
+        updateVoxelBlockNeighbor(event.getBlock().getLocation(), null, 1); // TODO : add radius to config
+    }
+
+    @EventHandler
     public void onPlayerInteract(@NotNull PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         ItemStack stack = event.getItem();
-        if (stack == null || stack.getType() != Material.PAPER) {
+        if (stack == null || stack.getType() != Material.PAPER) return;
+
+        Player player = event.getPlayer();
+        Block clickedBlock = event.getClickedBlock();
+        if (clickedBlock == null) return;
+
+        UUID playerId = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
+        Long lastUsage = placementCooldowns.get(playerId);
+
+        if (lastUsage != null && (currentTime - lastUsage) < COOLDOWN) {
+            event.setCancelled(true);
             return;
         }
 
-        String material = stack.getPersistentDataContainer().get(
+        String materialString = stack.getPersistentDataContainer().get(
                 new NamespacedKey("voxelmeta", "material"),
                 PersistentDataType.STRING
         );
 
-        if (material != null && VoxelMaterial.valueOf(material).getVaMaterial().isBlock()) {
-            Block clickedBlock = event.getClickedBlock();
-            if (clickedBlock == null) {
-                return;
-            }
+        if (materialString == null) return;
 
-            Location targetLocation = clickedBlock.getRelative(event.getBlockFace()).getLocation();
-
-            if (targetLocation.getBlock().getType() != Material.AIR) {
-                return;
-            }
-
-            VoMaterial voxelMat = VoxelMaterial.valueOf(material);
-            targetLocation.getBlock().setType(voxelMat.getVaMaterial());
-
-            new VoxelBlock(targetLocation, stack);
-
-            updateVoxelBlockNeighbor(targetLocation, null, 1); // TODO : add radius to config
-
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                stack.setAmount(stack.getAmount() - 1);
-            }
-
-            event.setCancelled(true);
+        VoMaterial voxelMaterial;
+        try {
+            voxelMaterial = VoxelMaterial.valueOf(materialString);
+        } catch (IllegalArgumentException e) {
+            return;
         }
+
+        if (!voxelMaterial.getVaMaterial().isBlock()) return;
+
+        Location targetLocation = clickedBlock.getRelative(event.getBlockFace()).getLocation();
+        Block targetBlock = targetLocation.getBlock();
+
+        if (!canPlaceBlock(player, targetBlock, clickedBlock)) {
+            event.setCancelled(false);
+            return;
+        }
+
+        updateVoxelBlockNeighbor(targetLocation, null, 1); // TODO : get Radius from Config
+
+        targetBlock.setType(voxelMaterial.getVaMaterial());
+        new VoxelBlock(targetLocation, stack);
+
+        if (player.getGameMode() != GameMode.CREATIVE) {
+            stack.setAmount(stack.getAmount() - 1);
+        }
+
+        placementCooldowns.put(playerId, currentTime);
+        event.setCancelled(true);
     }
 
+    private boolean canPlaceBlock(Player player, @NotNull Block targetBlock, Block clickedBlock) {
+        if (targetBlock.getType() != Material.AIR) return false;
+
+        if (!isBlockClear(targetBlock)) return false;
+
+        Material clickedType = clickedBlock.getType();
+        return player.isSneaking() || (
+                clickedType != Material.CHEST &&
+                        clickedType != Material.TRAPPED_CHEST &&
+                        clickedType != Material.ENDER_CHEST &&
+                        clickedType != Material.FURNACE &&
+                        clickedType != Material.BLAST_FURNACE &&
+                        clickedType != Material.SMOKER &&
+                        clickedType != Material.BARREL &&
+                        clickedType != Material.BREWING_STAND &&
+                        clickedType != Material.CRAFTING_TABLE &&
+                        clickedType != Material.ANVIL &&
+                        clickedType != Material.CHIPPED_ANVIL &&
+                        clickedType != Material.DAMAGED_ANVIL &&
+                        clickedType != Material.GRINDSTONE &&
+                        clickedType != Material.LECTERN &&
+                        clickedType != Material.LOOM &&
+                        clickedType != Material.CARTOGRAPHY_TABLE &&
+                        clickedType != Material.FLETCHING_TABLE &&
+                        clickedType != Material.SMITHING_TABLE &&
+                        clickedType != Material.STONECUTTER &&
+
+                        !clickedType.toString().endsWith("_DOOR") &&
+                        !clickedType.toString().endsWith("_TRAPDOOR") &&
+                        !clickedType.toString().endsWith("_FENCE_GATE") &&
+                        clickedType != Material.IRON_DOOR &&
+                        clickedType != Material.IRON_TRAPDOOR &&
+
+                        !clickedType.toString().endsWith("_BUTTON") &&
+                        clickedType != Material.LEVER &&
+
+                        !clickedType.toString().endsWith("_SIGN") &&
+                        !clickedType.toString().endsWith("_WALL_SIGN") &&
+                        !clickedType.toString().endsWith("_HANGING_SIGN") &&
+                        !clickedType.toString().endsWith("_WALL_HANGING_SIGN") &&
+
+                        !clickedType.toString().endsWith("_BED") &&
+
+                        !clickedType.toString().endsWith("_SHULKER_BOX") &&
+
+                        clickedType != Material.NOTE_BLOCK &&
+                        clickedType != Material.JUKEBOX &&
+                        clickedType != Material.BELL &&
+                        clickedType != Material.COMPOSTER &&
+                        clickedType != Material.FLOWER_POT &&
+                        clickedType != Material.END_PORTAL_FRAME &&
+                        clickedType != Material.DAYLIGHT_DETECTOR &&
+                        clickedType != Material.CAULDRON &&
+                        clickedType != Material.CONDUIT &&
+                        clickedType != Material.ENCHANTING_TABLE &&
+                        clickedType != Material.BEACON &&
+                        clickedType != Material.REPEATER &&
+                        clickedType != Material.COMPARATOR &&
+                        !clickedType.toString().endsWith("_BANNER") &&
+                        clickedType != Material.SOUL_CAMPFIRE &&
+                        clickedType != Material.CAMPFIRE
+        );
+    }
+
+    public boolean isBlockClear(Block targetBlock) {
+        BoundingBox blockBox = BoundingBox.of(targetBlock);
+
+        for (Entity entity : targetBlock.getWorld().getNearbyEntities(blockBox)) {
+            if (entity instanceof LivingEntity livingEntity) {
+                BoundingBox entityBox = livingEntity.getBoundingBox();
+                if (entityBox.overlaps(blockBox)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     private void updateVoxelBlockNeighbor(@NotNull Location location, Location airLoc, int radius) {
         Location base = location.toBlockLocation();
