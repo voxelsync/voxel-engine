@@ -1,5 +1,6 @@
 package sync.voxel.paper.runtime.command.subcommands;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,56 +30,59 @@ public class EnchantSubCommand extends SubCommand {
         switch (args[0].toLowerCase()) {
             case "getBook":
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(prefix + "§cYou have to be a Player for this action");
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to be a Player for this action")));
                     return;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(prefix + "§cYou have to specify a Enchantment <- exception in argument 2");
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 2")));
                     return;
                 }
                 if (VoEnchantment.valueOf(args[1]) == null) {
-                    sender.sendMessage(prefix + "§cInvalid Enchantment <- exception in argument 2");
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 2")));
                     return;
                 }
                 voEnchant = VoEnchantment.valueOf(args[1]);
                 if (args.length < 3) {
-                    sender.sendMessage(prefix + "§cYou have to specify a Enchantment Level <- exception in argument 3");
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 3")));
                     return;
                 }
                 if (PaperPlugin.getInt(args[2]) == null) {
-                    sender.sendMessage(prefix + "§cInvalid Number <- exception in argument 3");
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 3")));
                     return;
                 }
                 lvl = PaperPlugin.getInt(args[2]);
                 player = (Player) sender;
                 player.getInventory().addItem(getBook(voEnchant, lvl > 255 ? 255 : lvl));
+                break;
+
             case "add":
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(prefix + "§cYou have to be a Player for this action");
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to be a Player for this action")));
                     return;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(prefix + "§cYou have to specify a Enchantment <- exception in argument 2");
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 2")));
                     return;
                 }
                 if (VoEnchantment.valueOf(args[1]) == null) {
-                    sender.sendMessage(prefix + "§cInvalid Enchantment <- exception in argument 2");
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 2")));
                     return;
                 }
                 voEnchant = VoEnchantment.valueOf(args[1]);
                 if (args.length < 3) {
-                    sender.sendMessage(prefix + "§cYou have to specify a Enchantment Level <- exception in argument 3");
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 3")));
                     return;
                 }
                 if (PaperPlugin.getInt(args[2]) == null) {
-                    sender.sendMessage(prefix + "§cInvalid Number <- exception in argument 3");
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 3")));
                     return;
                 }
                 lvl = PaperPlugin.getInt(args[2]);
                 player = (Player) sender;
                 voxEnchantManager.addEnchant(player.getInventory().getItemInMainHand(), voEnchant, lvl);
-
+                break;
         }
+
     }
 
     @Override
