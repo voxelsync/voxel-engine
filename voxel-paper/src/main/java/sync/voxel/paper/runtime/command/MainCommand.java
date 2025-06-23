@@ -70,6 +70,6 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 completerlist.add(string);
             }
         }
-        return List.of();
+        return completerlist;
     }
 }

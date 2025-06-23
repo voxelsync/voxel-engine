@@ -21,33 +21,33 @@ public class EnchantSubCommand extends SubCommand {
     @Override
     public void onIntialize(String[] args, CommandSender sender, Command command) {
         if (args.length < 1) {
-            sender.sendMessage(prefix + "§cYou have to specify a Action <- exception in argument 1");
+            sender.sendMessage(prefix.append(Component.text("§cYou have to specify a Action <- exception in argument 2")));
             return;
         }
         VoEnchantment voEnchant;
         Integer lvl;
         Player player;
         switch (args[0].toLowerCase()) {
-            case "getBook":
+            case "getbook":
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to be a Player for this action")));
                     return;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 2")));
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 3")));
                     return;
                 }
                 if (VoEnchantment.valueOf(args[1]) == null) {
-                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 2")));
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 3")));
                     return;
                 }
                 voEnchant = VoEnchantment.valueOf(args[1]);
                 if (args.length < 3) {
-                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 3")));
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 4")));
                     return;
                 }
                 if (PaperPlugin.getInt(args[2]) == null) {
-                    sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 3")));
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 4")));
                     return;
                 }
                 lvl = PaperPlugin.getInt(args[2]);
@@ -61,25 +61,28 @@ public class EnchantSubCommand extends SubCommand {
                     return;
                 }
                 if (args.length < 2) {
-                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 2")));
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 3")));
                     return;
                 }
                 if (VoEnchantment.valueOf(args[1]) == null) {
-                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 2")));
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 3")));
                     return;
                 }
                 voEnchant = VoEnchantment.valueOf(args[1]);
                 if (args.length < 3) {
-                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 3")));
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 4")));
                     return;
                 }
                 if (PaperPlugin.getInt(args[2]) == null) {
-                    sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 3")));
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 4")));
                     return;
                 }
                 lvl = PaperPlugin.getInt(args[2]);
                 player = (Player) sender;
                 voxEnchantManager.addEnchant(player.getInventory().getItemInMainHand(), voEnchant, lvl);
+                break;
+            default:
+                sender.sendMessage(prefix.append(Component.text("§cInvalid Action <- Exception in Argument 2")));
                 break;
         }
 
