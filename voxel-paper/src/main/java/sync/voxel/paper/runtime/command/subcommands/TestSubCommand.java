@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import sync.voxel.paper.runtime.command.SubCommand;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestSubCommand extends SubCommand {
@@ -15,7 +16,7 @@ public class TestSubCommand extends SubCommand {
 
     @Override
     public List<String> getTabCompleter(String[] args, CommandSender sender, Command command) {
-
+        return new ArrayList<>();
     }
 
     public TestSubCommand(String key) {
