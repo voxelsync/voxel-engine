@@ -1,15 +1,17 @@
 package sync.voxel.paper.runtime.behavior;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import sync.voxel.api.material.VoMaterial;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
 import sync.voxel.paper.runtime.world.VoxelBlock;
@@ -30,14 +32,46 @@ public final class BlockBehavior implements Listener {
     }
 
     @EventHandler
-    public void onBlockPlace(@NotNull BlockPlaceEvent event) {
-        ItemStack stack = event.getItemInHand();
-        String material =  stack.getPersistentDataContainer().get(new NamespacedKey("voxelmeta", "material"), PersistentDataType.STRING);
-        if (material != null && VoxelMaterial.valueOf(material).getVaMaterial().isBlock()) {
-            new VoxelBlock(event.getBlock().getLocation(), stack);
+    public void onPlayerInteract(@NotNull PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
         }
 
-        updateVoxelBlockNeighbor(event.getBlock().getLocation(), null, 1); // TODO : add radius to config
+        ItemStack stack = event.getItem();
+        if (stack == null || stack.getType() != Material.PAPER) {
+            return;
+        }
+
+        String material = stack.getPersistentDataContainer().get(
+                new NamespacedKey("voxelmeta", "material"),
+                PersistentDataType.STRING
+        );
+
+        if (material != null && VoxelMaterial.valueOf(material).getVaMaterial().isBlock()) {
+            Block clickedBlock = event.getClickedBlock();
+            if (clickedBlock == null) {
+                return;
+            }
+
+            Location targetLocation = clickedBlock.getRelative(event.getBlockFace()).getLocation();
+
+            if (targetLocation.getBlock().getType() != Material.AIR) {
+                return;
+            }
+
+            VoMaterial voxelMat = VoxelMaterial.valueOf(material);
+            targetLocation.getBlock().setType(voxelMat.getVaMaterial());
+
+            new VoxelBlock(targetLocation, stack);
+
+            updateVoxelBlockNeighbor(targetLocation, null, 1); // TODO : add radius to config
+
+            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                stack.setAmount(stack.getAmount() - 1);
+            }
+
+            event.setCancelled(true);
+        }
     }
 
 
