@@ -7,13 +7,14 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sync.voxel.paper.runtime.command.subcommands.EnchantSubCommand;
+import sync.voxel.paper.runtime.command.subcommands.TestSubCommand;
 import sync.voxel.paper.text.Label;
 
 import java.util.*;
 
 public class MainCommand implements CommandExecutor, TabCompleter {
     
-    public HashMap<String, SubCommand> subCommands;
+    public static HashMap<String, SubCommand> subCommands;
     
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
@@ -27,17 +28,18 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
         List<String> argList = new ArrayList<>(Arrays.asList(args));
         argList.removeFirst();
-        subCommands.get(args[0]).intialize((String[]) argList.toArray(), sender, command);
+        subCommands.get(args[0]).intialize(argList.toArray(String[]::new), sender, command);
         return false;
     }
 
-    public void registerSubCommand(SubCommand command) {
+    public static void registerSubCommand(SubCommand command) {
         subCommands.put(command.getKey(), command);
     }
 
     public MainCommand registerSubCommands() {
         subCommands = new HashMap<>();
-        registerSubCommand(new EnchantSubCommand("enchant"));
+        new EnchantSubCommand("enchant");
+        new TestSubCommand("test", "dev");
         return this;
     }
 
@@ -55,7 +57,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             argList.removeFirst();
             if (subCommands.containsKey(args[0].toLowerCase())) {
                 SubCommand subCommand = subCommands.get(args[0].toLowerCase());
-                for (String tabComplete : subCommand.getTabCompleter((String[]) argList.toArray(), sender, command)) {
+                for (String tabComplete : subCommand.getTabCompleter(argList.toArray(String[]::new), sender, command)) {
                     list.add(tabComplete);
                 }
             }

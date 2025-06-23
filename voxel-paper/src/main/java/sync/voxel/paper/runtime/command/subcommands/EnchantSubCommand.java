@@ -89,7 +89,7 @@ public class EnchantSubCommand extends SubCommand {
         return list;
     }
 
-    public EnchantSubCommand(String key) {
+    public EnchantSubCommand(String... key) {
         super(key);
     }
 

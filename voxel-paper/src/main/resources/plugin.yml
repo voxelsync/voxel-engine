@@ -6,7 +6,6 @@ api-version: '1.21'
 prefix: Voxel
 authors: [ VoxelSync ]
 commands:
-  test:
   voxelengine:
     description: "Main Command for Voxel Engine"
     aliases: [ve,vengine, vxe]
