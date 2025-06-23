@@ -3,31 +3,71 @@ package sync.voxel.paper.runtime.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import sync.voxel.paper.runtime.command.subcommands.EnchantSubCommand;
+import sync.voxel.paper.text.Label;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class MainCommand implements CommandExecutor {
+public class MainCommand implements CommandExecutor, TabCompleter {
     
-    public List<SubCommand> subCommands = new ArrayList<>();
+    public HashMap<String, SubCommand> subCommands;
     
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
-        for (SubCommand subCommand : subCommands) {
-            
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
+        if (args.length < 1) {
+            sender.sendMessage(Label.of("voxelengine.command.main.", "error.no_subcommand").toTranslation().toComponent());
+            return true;
         }
+        if (!subCommands.containsKey(args[0])) {
+            sender.sendMessage(Label.of("voxelengine.command.main.", "error.invalid_subcommand").toTranslation().toComponent());
+            return true;
+        }
+        List<String> argList = new ArrayList<>(Arrays.asList(args));
+        argList.removeFirst();
+        subCommands.get(args[0]).intialize((String[]) argList.toArray(), sender, command);
         return false;
     }
 
     public void registerSubCommand(SubCommand command) {
-        subCommands.add(command);
+        subCommands.put(command.getKey(), command);
     }
 
-    public void registerSubCommands() {
+    public MainCommand registerSubCommands() {
+        subCommands = new HashMap<>();
         registerSubCommand(new EnchantSubCommand("enchant"));
+        return this;
     }
 
 
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        List<String> list = new ArrayList<>();
+        if (args.length == 1) {
+            for (SubCommand subCommand : subCommands.values()) {
+                list.add(subCommand.getKey());
+            }
+        }
+        if (args.length > 1) {
+            List<String> argList = new ArrayList<>(Arrays.asList(args));
+            argList.removeFirst();
+            if (subCommands.containsKey(args[0].toLowerCase())) {
+                SubCommand subCommand = subCommands.get(args[0].toLowerCase());
+                for (String tabComplete : subCommand.getTabCompleter((String[]) argList.toArray(), sender, command)) {
+                    list.add(tabComplete);
+                }
+            }
+        }
+        ArrayList<String> completerlist = new ArrayList<>();
+        String arg = args[args.length-1].toLowerCase();
+        for (String string : list) {
+            String s1 = string.toLowerCase();
+            if (s1.toLowerCase().startsWith(arg)) {
+                completerlist.add(string);
+            }
+        }
+        return List.of();
+    }
 }

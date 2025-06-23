@@ -19,6 +19,10 @@ public abstract class SubCommand {
 
     public abstract List<String> getTabCompleter(String[] args, CommandSender sender, Command command);
 
+    public final void intialize(String[] args, CommandSender sender, Command command) {
+        onIntialize(args, sender, command);
+    }
+
     public String getKey() {
         return key;
     }

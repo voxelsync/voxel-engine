@@ -20,6 +20,7 @@ import sync.voxel.api.common.VoKey;
 import sync.voxel.api.common.VoRenderType;
 import sync.voxel.paper.builder.vaconverter.VanillaConverter;
 import sync.voxel.paper.runtime.behavior.BlockBehavior;
+import sync.voxel.paper.runtime.command.MainCommand;
 import sync.voxel.paper.runtime.command.TestCommand;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
 
@@ -38,6 +39,10 @@ public class PaperPlugin extends JavaPlugin {
         VoxelMaterial.forkMaterial(Material.STONE, VoKey.of("voxel:test_block"), VoRenderType.BLOCK_TEXTURE_ID);
 
         getCommand("test").setExecutor(new TestCommand());
+        MainCommand mainCommand = new MainCommand();
+        mainCommand.registerSubCommands();
+        getCommand("voxelengine").setExecutor(mainCommand);
+        getCommand("voxelengine").setTabCompleter(mainCommand);
     }
 
     @Override

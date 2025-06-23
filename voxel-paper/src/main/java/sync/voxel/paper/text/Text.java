@@ -42,7 +42,7 @@ public final class Text {
      *
      * @param path The path to the directory containing language files
      */
-    public static void startStory(String path) {
+    public static void registerLangDirectory(String path) {
         Text.langPath = path != null ? path : DEFAULT_LANG_DIR;
     }
 
