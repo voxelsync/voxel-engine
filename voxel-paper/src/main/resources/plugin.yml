@@ -7,3 +7,10 @@ prefix: Voxel
 authors: [ VoxelSync ]
 commands:
   test:
+  voxelengine:
+    description: "Main Command for Voxel Engine"
+    aliases: [ve,vengine, vxe]
+    permissions:
+      voxelengine.command.main:
+      voxelengine.*:
+
