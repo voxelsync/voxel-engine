@@ -13,7 +13,7 @@ public class VoxelWorld {
         return voxelBlocks.get(location);
     }
 
-    public static boolean contains(Location location) {
+    public static boolean containsVoxelBlock(Location location) {
         return voxelBlocks.containsKey(location);
     }
 

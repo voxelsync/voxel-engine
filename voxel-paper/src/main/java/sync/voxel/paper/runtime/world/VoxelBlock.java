@@ -3,13 +3,17 @@ package sync.voxel.paper.runtime.world;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
+import org.joml.Random;
 import org.joml.Vector3f;
 
 @Getter @Setter
@@ -19,13 +23,14 @@ public class VoxelBlock {
     private final ItemStack stack;
     private int[] offset = new int[]{0, 0, 0};
 
-    public VoxelBlock(@NotNull Location location, ItemStack stack) {
+    public VoxelBlock(@NotNull Location location, @NotNull ItemStack stack) {
         location.setPitch(0);
         location.setYaw(0);
 
         this.location = location;
         this.offset = getBestOffset(null);
-        this.stack = stack;
+        this.stack = stack.clone();
+        this.stack.setAmount(1);
         this.display = location.getWorld().spawn(location, ItemDisplay.class, i -> updateDisplay(i, null));
 
         VoxelWorld.addVoxelBlock(location, this);
@@ -47,8 +52,15 @@ public class VoxelBlock {
         ));
     }
 
-    public void breakBlock() {
+    public void breakBlock(double chancePercent) {
+        VoxelWorld.removeVoxelBlock(this);
 
+        display.remove();
+
+        if (new Random().nextFloat() <= chancePercent) {
+            Item dropped = location.getWorld().dropItem(location.add(0.5, 0.5, 0.5), stack);
+            dropped.setVelocity(new Vector(0, 0.2, 0));
+        }
     }
 
     public void moveBlock(@NotNull Location location) {

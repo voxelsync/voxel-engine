@@ -39,6 +39,9 @@ public final class BlockBehavior implements Listener {
     @EventHandler
     public void onBlockBreak(@NotNull BlockBreakEvent event) {
         updateVoxelBlockNeighbor(event.getBlock().getLocation(), event.getBlock().getLocation(), 1); // TODO : add radius to config
+        if (VoxelWorld.containsVoxelBlock(event.getBlock().getLocation())) {
+            VoxelWorld.getVoxelBlock(event.getBlock().getLocation()).breakBlock(1);
+        }
     }
 
     @EventHandler
@@ -90,10 +93,10 @@ public final class BlockBehavior implements Listener {
             return;
         }
 
-        updateVoxelBlockNeighbor(targetLocation, null, 1); // TODO : get Radius from Config
-
         targetBlock.setType(voxelMaterial.getVaMaterial());
         new VoxelBlock(targetLocation, stack);
+
+        updateVoxelBlockNeighbor(targetLocation.toBlockLocation(), null, 1); // TODO : get Radius from Config
 
         if (player.getGameMode() != GameMode.CREATIVE) {
             stack.setAmount(stack.getAmount() - 1);
@@ -192,7 +195,7 @@ public final class BlockBehavior implements Listener {
                     if (dist == 0 || dist > radius) continue;
 
                     Location neighbor = base.clone().add(x, y, z);
-                    if (VoxelWorld.contains(neighbor)) {
+                    if (VoxelWorld.containsVoxelBlock(neighbor)) {
                         VoxelWorld.getVoxelBlock(neighbor).updateBlock(airLoc);
                     }
 
