@@ -1,5 +1,8 @@
 package sync.voxel.paper.runtime.enchantment;
 
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class VoxelEnchantment implements VoEnchantment {
+
+    public static final Registry<@NotNull Enchantment> VANILLA_ENCHANTMENTS = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
 
     private final VoKey key;
     private final Map<String, Object> nbt = new HashMap<>();
