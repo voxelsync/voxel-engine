@@ -41,7 +41,7 @@ public class TestCommand implements CommandExecutor {
     }
 
     private @NotNull ItemStack createTestBlock() {
-        ItemStack block = new ItemStack(VoxelMaterial.valueOf("voxel:test_block").getVaMaterial());
+        ItemStack block = new ItemStack(Material.PAPER);
         NamespacedKey key = new NamespacedKey("voxelmeta", "material");
 
         block.editMeta(meta -> {
@@ -50,6 +50,7 @@ public class TestCommand implements CommandExecutor {
                     PersistentDataType.STRING,
                     "voxel:test_block"
             );
+            meta.setCustomModelData(187);
         });
 
         return block;
