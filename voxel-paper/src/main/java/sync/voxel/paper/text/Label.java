@@ -24,6 +24,10 @@ public class Label {
         return label.apply(language);
     }
 
+    public Translation fromDefault() {
+        return label.apply(null);
+    }
+
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull Label of(String path, String key) {
         return new Label(path, key);
