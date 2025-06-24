@@ -1,4 +1,4 @@
-package sync.voxel.paper.text;
+package sync.voxel.paper.utils.text;
 
 import org.jetbrains.annotations.Nullable;
 

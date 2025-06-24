@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sync.voxel.paper.runtime.command.subcommands.EnchantSubCommand;
 import sync.voxel.paper.runtime.command.subcommands.TestSubCommand;
-import sync.voxel.paper.text.Label;
+import sync.voxel.paper.utils.text.Label;
 
 import java.util.*;
 

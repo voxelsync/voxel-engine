@@ -1,4 +1,4 @@
-package sync.voxel.paper.text;
+package sync.voxel.paper.utils.text;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -41,7 +41,7 @@ public record Translation(
      * @return the unformatted text string
      */
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return value;
     }
 
@@ -74,7 +74,7 @@ public record Translation(
      * @param value       the replacement value
      * @return the formatted Component
      */
-    public Component format(String placeholder, String value) {
+    public @NotNull Component format(String placeholder, String value) {
         return format(Map.of(placeholder, value));
     }
 
@@ -89,7 +89,7 @@ public record Translation(
      * @param replacements map of placeholder names (without %) to their replacement values
      * @return the fully formatted Component
      */
-    public Component format(Map<String, String> replacements) {
+    public @NotNull Component format(Map<String, String> replacements) {
         if (replacements == null || replacements.isEmpty()) {
             return deserializeLegacy(value);
         }
@@ -121,7 +121,7 @@ public record Translation(
      * @param input the legacy string
      * @return the parsed Component
      */
-    private static Component deserializeLegacy(String input) {
+    private static @NotNull Component deserializeLegacy(String input) {
         return LEGACY.deserialize(input);
     }
 }
