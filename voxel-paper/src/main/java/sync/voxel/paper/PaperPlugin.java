@@ -19,6 +19,7 @@ import sync.voxel.api.common.VoRenderType;
 import sync.voxel.paper.builder.vaconverter.VanillaConverter;
 import sync.voxel.paper.runtime.behavior.BlockBehavior;
 import sync.voxel.paper.runtime.command.MainCommand;
+import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
 
 public class PaperPlugin extends JavaPlugin {
@@ -31,6 +32,7 @@ public class PaperPlugin extends JavaPlugin {
         PaperPlugin.plugin = this;
         VoxelEngine.register(new PaperEngine());
         VanillaConverter.convert();
+        VoxelEnchantment.forkEnchantment(new VoKey("voxel", "vein_ming"));
 
         BlockBehavior.register();
         VoxelMaterial.forkMaterial(Material.STONE, VoKey.of("voxel:test_block"), VoRenderType.BLOCK_TEXTURE_ID);

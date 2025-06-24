@@ -9,8 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import sync.voxel.api.enchantment.VoEnchantment;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.command.SubCommand;
+import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static sync.voxel.paper.PaperPlugin.prefix;
@@ -81,6 +83,27 @@ public class EnchantSubCommand extends SubCommand {
                 player = (Player) sender;
                 voxEnchantManager.addEnchant(player.getInventory().getItemInMainHand(), voEnchant, lvl);
                 break;
+            case "remove":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to be a Player for this action")));
+                    return;
+                }
+                player = (Player) sender;
+                if (args.length < 2) {
+                    sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 3")));
+                    return;
+                }
+                if (VoEnchantment.valueOf(args[1]) == null) {
+                    sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 3")));
+                    return;
+                }
+                voEnchant = VoEnchantment.valueOf(args[1]);
+                if (voxEnchantManager.hasEnchant(player.getInventory().getItemInMainHand(), voEnchant)) {
+                    sender.sendMessage(prefix.append(Component.text("§cTYour Item doesn't have this Enchantment")));
+                    return;
+                }
+                voxEnchantManager.removeEnchant(player.getInventory().getItemInMainHand(), voEnchant);
+                break;
             default:
                 sender.sendMessage(prefix.append(Component.text("§cInvalid Action <- Exception in Argument 2")));
                 break;
@@ -91,8 +114,25 @@ public class EnchantSubCommand extends SubCommand {
     @Override
     public List<String> getTabCompleter(String[] args, CommandSender sender, Command command) {
         List<String> list = new ArrayList<>();
-        list.add("getBook");
-        list.add("add");
+        if (args.length == 1) {
+            list.add("getBook");
+            list.add("add");
+            list.add("remove");
+        }
+        if (args.length == 2) {
+            if (Arrays.asList("getbook", "add", "remove").contains(args[0].toLowerCase())) {
+                VoxelEnchantment.values().forEach(enchant -> list.add(enchant.getKey().toString()));
+            }
+        }
+        if (args.length == 3) {
+            if (Arrays.asList("getbook", "add").contains(args[0].toLowerCase())) {
+                if (VoEnchantment.valueOf(args[1]) != null) {
+                    for (Integer i = 0; i < VoEnchantment.valueOf(args[1]).getAttribute("max_level", Integer.class, 1)+1; i++) {
+                        list.add(i.toString());
+                    }
+                }
+            }
+        }
         return list;
     }
 
