@@ -37,6 +37,7 @@ public final class VoxelEnchantManager {
             meta.addEnchant(VoxelEnchantment.VANILLA_ENCHANTMENTS.getOrThrow(NamespacedKey.fromString(enchant.getKey().toString())), level, true);
         }
         meta.setLore(lores);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.setEnchantmentGlintOverride(true);
         item.setItemMeta(meta);
         return item;

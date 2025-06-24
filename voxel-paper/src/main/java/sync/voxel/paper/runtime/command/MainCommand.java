@@ -19,11 +19,11 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
         if (args.length < 1) {
-            sender.sendMessage(Label.of("voxelengine.command.main.", "error.no_subcommand").toTranslation().toComponent());
+            sender.sendMessage(Label.of("command.main.", "error.no_subcommand").toTranslation().toComponent());
             return true;
         }
         if (!subCommands.containsKey(args[0])) {
-            sender.sendMessage(Label.of("voxelengine.command.main.", "error.invalid_subcommand").toTranslation().toComponent());
+            sender.sendMessage(Label.of("command.main.", "error.invalid_subcommand").toTranslation().toComponent());
             return true;
         }
         List<String> argList = new ArrayList<>(Arrays.asList(args));

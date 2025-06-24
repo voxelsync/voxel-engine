@@ -98,7 +98,7 @@ public class EnchantSubCommand extends SubCommand {
                     return;
                 }
                 voEnchant = VoEnchantment.valueOf(args[1]);
-                if (voxEnchantManager.hasEnchant(player.getInventory().getItemInMainHand(), voEnchant)) {
+                if (!voxEnchantManager.hasEnchant(player.getInventory().getItemInMainHand(), voEnchant)) {
                     sender.sendMessage(prefix.append(Component.text("§cTYour Item doesn't have this Enchantment")));
                     return;
                 }
