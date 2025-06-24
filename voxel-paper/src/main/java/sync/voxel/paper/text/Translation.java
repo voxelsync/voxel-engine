@@ -1,8 +1,7 @@
 package sync.voxel.paper.text;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,27 +10,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a translated text with placeholder support.
+ * Represents a translated text with placeholder and legacy color support.
  * <p>
  * Placeholders must be in the format {@code %placeholder%} and will be replaced
- * by values from the format mapold. Other formats like {@code <placeholder>} will
- * not be processed.
+ * by values from the provided map. Color formatting is supported via {@code &}-codes
+ * (e.g. {@code &a}, {@code &l}) and hex color codes (e.g. {@code &#ff0000}).
+ * <p>
+ * Example value:
+ * {@code "&aHello, %name%!"}
+ * <br>
+ * Replacement: {@code %name% -> "&bLenny"} → Result: "Hello, Lenny" with colors.
  *
- * @param key The text key used to identify this text
- * @param value The actual translated text with potential placeholders
+ * @param key   The translation key used to identify this text
+ * @param value The actual translated text with placeholders and legacy formatting
  */
 public record Translation(
         String key,
         String value) {
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%([a-zA-Z0-9_]+)%");
-    private static final TextColor DEFAULT_TEXT_COLOR = TextColor.color(0xAAAAAA); // Gray
-    private static final int DEFAULT_REPLACEMENT_COLOR = 0x55FFFF; // Cyan
-    private static final int ERROR_REPLACEMENT_COLOR = 0xED727C; // Red soft
+
+    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexColors()
+            .build();
 
     /**
-     * Returns the raw translated value without any placeholder processing.
-     * @return The unmodified text value
+     * Returns the raw translation value without any placeholder processing.
+     *
+     * @return the unformatted text string
      */
     @Override
     public String toString() {
@@ -39,112 +46,82 @@ public record Translation(
     }
 
     /**
-     * Alias for {@link #toComponent()} - returns the raw translated value.
-     * @return The unmodified text value
+     * Converts the raw value to a Component using legacy formatting codes.
+     *
+     * @return the raw Component with colors
      */
     @Contract(value = " -> new", pure = true)
     public @NotNull Component toRawComponent() {
-        return Component.text(value).color(DEFAULT_TEXT_COLOR);
+        return deserializeLegacy(value);
     }
 
     /**
-     * Alias for {@link #toString()} - returns the raw translated value.
-     * @return The unmodified text value as Component
+     * Alias for {@link #toRawComponent()} – returns the legacy-colored component without replacements.
+     *
+     * @return the legacy-formatted Component
      */
     @Contract(value = " -> new", pure = true)
     public @NotNull Component toComponent() {
-        return Component.text(value).color(DEFAULT_TEXT_COLOR);
+        return deserializeLegacy(value);
     }
 
     /**
-     * Alias for {@link #format(Map, int)} - replacements and colored.
-     * @return The formatted Component with colored replacements
+     * Replaces a single placeholder in this translation.
+     * <p>
+     * The replacement may also contain color codes.
+     *
+     * @param placeholder the placeholder name (without %)
+     * @param value       the replacement value
+     * @return the formatted Component
      */
     public Component format(String placeholder, String value) {
-        return format(placeholder, value, DEFAULT_REPLACEMENT_COLOR);
+        return format(Map.of(placeholder, value));
     }
 
     /**
-     * Alias for {@link #format(Map, int)} - replacements and colored.
-     * @return The formatted Component with colored replacements
-     */
-    public Component formatToError(String placeholder, String value) {
-        return format(placeholder, value, ERROR_REPLACEMENT_COLOR);
-    }
-
-    /**
-     * Alias for {@link #format(Map, int)} - replacements and colored.
-     * @return The formatted Component with colored replacements
-     */
-    public Component format(String placeholder, String value, int replacementColor) {
-        return format(Map.of(placeholder, value), replacementColor);
-    }
-
-    /**
-     * Replaces placeholders in the format {@code %placeholder%} with values from the provided mapold,
-     * returning a Component where the base text is gray and replacements are colored.
+     * Replaces placeholders in the format {@code %placeholder%} with values from the provided map.
      * <p>
-     * Example:
-     * <pre>{@code
-     * Translation t = new Translation("key", "Use %command%");
-     * Component formatted = t.format(Map.of("command", "/msg <player>"), TextColor.color(0xFFAA00));
-     * // Result: "Use /msg <player>" where "Use " is gray and "/msg <player>" is orange
-     * }</pre>
+     * The result is parsed as legacy-formatted Component, including color codes in the base text
+     * and replacements.
+     * <p>
+     * Unknown placeholders remain untouched (e.g. {@code %unknown%}).
      *
-     * @param replacements Map of placeholder names (without % symbols) to their replacement values
-     * @param replacementColor The color for the replacement text
-     * @return The formatted Component with colored replacements
+     * @param replacements map of placeholder names (without %) to their replacement values
+     * @return the fully formatted Component
      */
-    public Component format(Map<String, String> replacements, int replacementColor) {
+    public Component format(Map<String, String> replacements) {
         if (replacements == null || replacements.isEmpty()) {
-            return Component.text(value).color(DEFAULT_TEXT_COLOR);
+            return deserializeLegacy(value);
         }
 
-        Component result = Component.empty();
+        StringBuilder resultBuilder = new StringBuilder();
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(value);
         int lastEnd = 0;
 
         while (matcher.find()) {
-            if (lastEnd < matcher.start()) {
-                result = result.append(
-                        Component.text(value.substring(lastEnd, matcher.start()))
-                                .color(DEFAULT_TEXT_COLOR)
-                );
-            }
+            resultBuilder.append(value, lastEnd, matcher.start());
 
             String placeholder = matcher.group(1);
             String replacement = replacements.getOrDefault(placeholder, matcher.group());
 
-            // Add replacement in special color
-            if (replacements.containsKey(placeholder)) {
-                result = result.append(
-                        Component.text(replacement)
-                                .color(TextColor.color(replacementColor))
-                );
-            } else {
-                result = result.append(
-                        Component.text(replacement)
-                                .color(DEFAULT_TEXT_COLOR)
-                );
-            }
-
+            resultBuilder.append(replacement);
             lastEnd = matcher.end();
         }
 
         if (lastEnd < value.length()) {
-            result = result.append(
-                    Component.text(value.substring(lastEnd))
-                            .color(DEFAULT_TEXT_COLOR)
-            );
+            resultBuilder.append(value.substring(lastEnd));
         }
 
-        return result;
+        return deserializeLegacy(resultBuilder.toString());
     }
 
     /**
-     * Overload of format with default replacement color.
+     * Internal utility for deserializing {@code &}-formatted text with optional {@code &#rrggbb} hex codes.
+     *
+     * @param input the legacy string
+     * @return the parsed Component
      */
-    public Component format(Map<String, String> replacements) {
-        return format(replacements, DEFAULT_REPLACEMENT_COLOR);
+    private static Component deserializeLegacy(String input) {
+        return LEGACY.deserialize(input);
     }
 }
