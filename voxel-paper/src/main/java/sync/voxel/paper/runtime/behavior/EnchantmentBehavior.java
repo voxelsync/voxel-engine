@@ -2,8 +2,6 @@ package sync.voxel.paper.runtime.behavior;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,12 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import sync.voxel.api.enchantment.VoEnchantment;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
+import sync.voxel.paper.utils.item.VoxelItem;
 
-import javax.crypto.KEM;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sync.voxel.paper.runtime.enchantment.VoxelEnchantManager.voxEnchantManager;
 
 public final class EnchantmentBehavior implements Listener {
 
@@ -33,32 +30,48 @@ public final class EnchantmentBehavior implements Listener {
         ItemStack firstItem = event.getInventory().getItem(0);
         ItemStack secondItem = event.getInventory().getItem(1);
         ItemStack result = event.getResult();
+        assert firstItem != null;
+
+        if (result == null) return;
+        if (secondItem == null) return;
+
         if ((firstItem.getType() == secondItem.getType()) || (secondItem.getType() == Material.ENCHANTED_BOOK)) {
             event.setResult(null);
             return;
         }
+
         for (VoEnchantment voEnchant : VoxelEnchantment.values()) {
             if (!EnchantmentTarget.valueOf(voEnchant.getAttribute("enchantment_target", String.class, "tool")).includes(firstItem)) {
                 continue;
             }
-            if (voxEnchantManager.hasEnchant(firstItem, voEnchant) && voxEnchantManager.hasEnchant(secondItem, voEnchant)) {
-                int l1 = voxEnchantManager.getEnchantLevel(firstItem, voEnchant);
-                int l2 = voxEnchantManager.getEnchantLevel(secondItem, voEnchant);
-                voxEnchantManager.addEnchant(result, voEnchant, combineEnchantLevel(l1, l2, voEnchant.getAttribute("max_level", Integer.class, 1)));
+
+            boolean firstHas = VoxelItem.edit(firstItem).hasEnchant(voEnchant);
+            boolean secondHas = VoxelItem.edit(secondItem).hasEnchant(voEnchant);
+
+            if (firstHas && secondHas) {
+                int l1 = VoxelItem.edit(firstItem).getEnchantLevel(voEnchant);
+                int l2 = VoxelItem.edit(secondItem).getEnchantLevel(voEnchant);
+                int combined = combineEnchantLevel(l1, l2, voEnchant.getAttribute("max_level", Integer.class, 1));
+                VoxelItem.edit(result).addEnchant(voEnchant, combined);
                 continue;
             }
-            if (!voxEnchantManager.hasEnchant(firstItem, voEnchant) && voxEnchantManager.hasEnchant(secondItem, voEnchant)) {
+
+            if (!firstHas && secondHas) {
+                //noinspection unchecked
                 for (String enchant : (List<String>) voEnchant.getAttribute("incompatible_enchants", List.class, new ArrayList<>())) {
-                    if (voxEnchantManager.hasEnchant(firstItem, VoxelEnchantment.valueOf(enchant))) {
+                    if (VoxelItem.edit(firstItem).hasEnchant(VoxelEnchantment.valueOf(enchant))) {
                         event.setResult(null);
                         return;
                     }
                 }
-                voxEnchantManager.addEnchant(result, voEnchant, voxEnchantManager.getEnchantLevel(secondItem, voEnchant));
+                int level = VoxelItem.edit(secondItem).getEnchantLevel(voEnchant);
+                VoxelItem.edit(result).addEnchant(voEnchant, level);
             }
         }
+
         event.setResult(result);
     }
+
 
     private Integer combineEnchantLevel(Integer l1, Integer l2, Integer maxLevel) {
         if (l1 > l2) {
