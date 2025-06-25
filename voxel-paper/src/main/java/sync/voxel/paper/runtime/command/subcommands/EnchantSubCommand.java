@@ -10,13 +10,13 @@ import sync.voxel.api.enchantment.VoEnchantment;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.command.SubCommand;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
+import sync.voxel.paper.utils.item.VoxelItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static sync.voxel.paper.PaperPlugin.prefix;
-import static sync.voxel.paper.runtime.enchantment.VoxelEnchantManager.voxEnchantManager;
 
 public class EnchantSubCommand extends SubCommand {
 
@@ -81,7 +81,7 @@ public class EnchantSubCommand extends SubCommand {
                 }
                 lvl = PaperPlugin.getInt(args[2]);
                 player = (Player) sender;
-                voxEnchantManager.addEnchant(player.getInventory().getItemInMainHand(), voEnchant, lvl);
+                VoxelItem.edit(player.getInventory().getItemInMainHand()).addEnchant(voEnchant, lvl);
                 break;
             case "remove":
                 if (!(sender instanceof Player)) {
@@ -98,11 +98,11 @@ public class EnchantSubCommand extends SubCommand {
                     return;
                 }
                 voEnchant = VoEnchantment.valueOf(args[1]);
-                if (!voxEnchantManager.hasEnchant(player.getInventory().getItemInMainHand(), voEnchant)) {
+                if (VoxelItem.edit(player.getInventory().getItemInMainHand()).hasEnchant(voEnchant)) {
                     sender.sendMessage(prefix.append(Component.text("§cTYour Item doesn't have this Enchantment")));
                     return;
                 }
-                voxEnchantManager.removeEnchant(player.getInventory().getItemInMainHand(), voEnchant);
+                VoxelItem.edit(player.getInventory().getItemInMainHand()).removeEnchant(voEnchant);
                 break;
             default:
                 sender.sendMessage(prefix.append(Component.text("§cInvalid Action <- Exception in Argument 2")));
@@ -141,6 +141,6 @@ public class EnchantSubCommand extends SubCommand {
     }
 
     public ItemStack getBook(VoEnchantment enchant, Integer level) {
-        return voxEnchantManager.addEnchant(new ItemStack(Material.ENCHANTED_BOOK), enchant, level);
+        return VoxelItem.edit(new ItemStack(Material.ENCHANTED_BOOK)).addEnchant(enchant, level).stack();
     }
 }
