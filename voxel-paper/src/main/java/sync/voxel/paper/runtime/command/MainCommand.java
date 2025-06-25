@@ -36,11 +36,10 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         subCommands.put(command.getKey(), command);
     }
 
-    public MainCommand registerSubCommands() {
+    public void registerSubCommands() {
         subCommands = new HashMap<>();
         new EnchantSubCommand("enchant");
         new TestSubCommand("test", "dev");
-        return this;
     }
 
 

@@ -207,7 +207,7 @@ public class VoxelItem {
         return this;
     }
 
-    public boolean hasEnchant(@NotNull VoxelEnchantment enchant) {
+    public boolean hasEnchant(@NotNull VoEnchantment enchant) {
         Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
 
         updateMeta();
@@ -231,7 +231,7 @@ public class VoxelItem {
         return false;
     }
 
-    public int getEnchantLevel(@NotNull VoxelEnchantment enchant) {
+    public int getEnchantLevel(@NotNull VoEnchantment enchant) {
         Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
 
         updateMeta();
