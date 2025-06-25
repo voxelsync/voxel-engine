@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.enchantment.VoEnchantment;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
@@ -26,7 +27,7 @@ public final class EnchantmentBehavior implements Listener {
     }
 
     @EventHandler
-    public void onAnvilPrepare(PrepareAnvilEvent event) {
+    public void onAnvilPrepare(@NotNull PrepareAnvilEvent event) {
         ItemStack firstItem = event.getInventory().getItem(0);
         ItemStack secondItem = event.getInventory().getItem(1);
         ItemStack result = event.getResult();
@@ -73,19 +74,14 @@ public final class EnchantmentBehavior implements Listener {
     }
 
 
-    private Integer combineEnchantLevel(Integer l1, Integer l2, Integer maxLevel) {
+    private int combineEnchantLevel(int l1, int l2, int maxLevel) {
         if (l1 > l2) {
             return l1;
-        }
-        else if (l2 > l1) {
+        } else if (l2 > l1) {
             return l2;
         }
-        else if (l2 == l1) {
-            return l1+1 <= maxLevel ? l1+1 : l1;
-        }
-        else {
-            return l1;
-        }
+        
+        return l1+1 <= maxLevel ? l1+1 : l1;
     }
 
 
