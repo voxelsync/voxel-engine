@@ -85,6 +85,7 @@ public class VoxelItem {
         meta.lore(lore); applyMeta();
     }
 
+
     // ===== PERSISTENT DATA CONTAINER METHODS =====
 
     @NotNull
@@ -161,6 +162,9 @@ public class VoxelItem {
         return pdc.has(namespacedKey);
     }
 
+
+    // ===== VOXEL ENCHANTMENT METHODS =====
+
     public VoxelItem addEnchant(@NotNull VoEnchantment voEnchant, @NotNull Integer level) {
         Objects.requireNonNull(voEnchant, "VoxelEnchantment cannot be null");
         Objects.requireNonNull(level, "Enchantment level cannot be null");
@@ -203,33 +207,37 @@ public class VoxelItem {
         return this;
     }
 
-
-    // ===== VOXEL ENCHANTMENT METHODS =====
-
-    public boolean hasEnchant(@NotNull ItemStack item, @NotNull VoxelEnchantment enchant) {
-        Objects.requireNonNull(item, "ItemStack cannot be null");
+    public boolean hasEnchant(@NotNull VoxelEnchantment enchant) {
         Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
 
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) {
-            return false;
-        }
-
+        updateMeta();
         NamespacedKey key = new NamespacedKey("voxelenchant", enchant.getKey().toString('/'));
+
         return meta.getPersistentDataContainer().has(key);
     }
 
-    public int getEnchantLevel(@NotNull ItemStack item, @NotNull VoxelEnchantment enchant) {
-        Objects.requireNonNull(item, "ItemStack cannot be null");
-        Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
+    public boolean hasAnyEnchant() {
 
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) {
-            return 0;
+        updateMeta();
+        if (!meta.getEnchants().isEmpty()) return true;
+
+        for (VoEnchantment enchant : VoxelEnchantment.values()) {
+            NamespacedKey key = new NamespacedKey("voxelenchant", enchant.getKey().toString('/'));
+            if (meta.getPersistentDataContainer().has(key)) {
+                return true;
+            }
         }
 
+        return false;
+    }
+
+    public int getEnchantLevel(@NotNull VoxelEnchantment enchant) {
+        Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
+
+        updateMeta();
         NamespacedKey key = new NamespacedKey("voxelenchant", enchant.getKey().toString('/'));
         Integer level = meta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+
         return level != null ? level : 0;
     }
 
