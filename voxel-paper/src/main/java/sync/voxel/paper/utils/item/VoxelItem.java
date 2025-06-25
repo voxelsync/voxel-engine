@@ -3,6 +3,7 @@ package sync.voxel.paper.utils.item;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -70,7 +71,10 @@ public class VoxelItem {
 
     private void updateMeta() {
         meta = stack.getItemMeta();
+        if (meta == null) throw new IllegalStateException("ItemMeta is null for item type: " + stack.getType()
+                    + ". This is likely caused by an item type that does not support meta, such as AIR.");
     }
+
 
     private void applyMeta() {
         stack.setItemMeta(meta);
@@ -183,6 +187,8 @@ public class VoxelItem {
             meta.addEnchant(vanillaEnchant, level, true);
         }
 
+        meta.setEnchantmentGlintOverride(true);
+
         applyMeta();
         return this;
     }
@@ -201,6 +207,10 @@ public class VoxelItem {
                 Enchantment vanillaEnchant = VoxelEnchantment.VANILLA_ENCHANTMENTS.getOrThrow(vanillaKey);
                 if (meta.hasEnchant(vanillaEnchant)) meta.removeEnchant(vanillaEnchant);
             }
+        }
+
+        if (!hasAnyEnchant() && !meta.hasEnchants()) {
+            meta.setEnchantmentGlintOverride(false);
         }
 
         applyMeta();
@@ -264,14 +274,19 @@ public class VoxelItem {
 
     // ===== ITEM LORE METHODS =====
 
-    public Component getLoreLine(int index) {
-        updateLore();
-        return lore.get(index);
-    }
-
     public List<Component> getLore() {
         updateLore();
         return lore;
+    }
+
+    public void setLore(List<Component> lore) {
+        this.lore = lore;
+        applyLore();
+    }
+
+    public Component getLoreLine(int index) {
+        updateLore();
+        return lore.get(index);
     }
 
     public VoxelItem addLoreLine(Component line) {
@@ -318,13 +333,24 @@ public class VoxelItem {
         return this;
     }
 
+    // ===== ITEM NAME / DISPLAY_NAME METHODS =====
+
+    public VoxelItem setDisplayName(Component name){
+        meta.displayName(name);
+        applyMeta();
+        return this;
+    }
+
+    public Component getDisplayName(){
+        updateMeta();
+        return meta.displayName();
+    }
 
 
     // ===== UPDATE / REFRESH ITEM METHODS =====
 
     private void updateEnchantmentItem() {
         updateMeta();
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         for (@NotNull Enchantment enchantment : VoxelEnchantment.VANILLA_ENCHANTMENTS) {
             if (meta.hasEnchant(enchantment)) {
                 VoxelItem item = addEnchant(

@@ -1,5 +1,6 @@
 package sync.voxel.paper.runtime.command.subcommands;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -36,6 +37,15 @@ public class TestSubCommand extends SubCommand {
             ItemStack block = createTestBlock();
             player.getInventory().addItem(block);
             player.sendMessage("§aDu hast einen Test-Block erhalten!");
+        });
+
+        registerAction("get_lore", player -> {
+            ItemStack block = createTestBlock();
+            List<Component> lore = player.getActiveItem().lore() != null ? player.getActiveItem().lore() : new ArrayList<>();
+            assert lore != null;
+            player.sendMessage("ItemLore[");
+            lore.forEach(line -> player.sendMessage(line.append(Component.text(","))));
+            player.sendMessage("]");
         });
 
         registerAction("explode", player -> {

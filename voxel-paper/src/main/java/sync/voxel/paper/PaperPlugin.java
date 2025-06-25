@@ -50,7 +50,7 @@ public class PaperPlugin extends JavaPlugin {
 
         PacketEvents.getAPI().getEventManager().registerListener(new ItemSendBehavior(), PacketListenerPriority.NORMAL);
 
-        VoxelEnchantment.forkEnchantment(new VoKey("voxel", "vein_ming"));
+        VoxelEnchantment.forkEnchantment(VoKey.of("voxel:vein_ming"));
         VoxelMaterial.forkMaterial(Material.STONE, VoKey.of("voxel:test_block"), VoRenderType.BLOCK_TEXTURE_ID);
 
         MainCommand mainCommand = new MainCommand();
