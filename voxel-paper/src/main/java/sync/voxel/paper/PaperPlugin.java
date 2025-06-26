@@ -47,6 +47,7 @@ public class PaperPlugin extends JavaPlugin {
         PacketEvents.getAPI().init();
         VanillaConverter.convert();
         BlockBehavior.register();
+        Text.registerLangDirectory("https://voxelsync.github.io/translation/");
 
         PacketEvents.getAPI().getEventManager().registerListener(new ItemSendBehavior(), PacketListenerPriority.NORMAL);
 
