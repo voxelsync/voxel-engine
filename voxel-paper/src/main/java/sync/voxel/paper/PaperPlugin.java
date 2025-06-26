@@ -27,6 +27,7 @@ import sync.voxel.paper.runtime.behavior.ItemSendBehavior;
 import sync.voxel.paper.runtime.command.MainCommand;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
+import sync.voxel.paper.utils.text.Text;
 
 public class PaperPlugin extends JavaPlugin {
 
