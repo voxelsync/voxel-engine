@@ -78,7 +78,7 @@ public class VoxelMaterial implements VoxMaterial {
     public Material getVaMaterial() {
         return vaMaterial;
     }
-    
+
     @Override
     public VoxRenderType getRenderType() {
         return renderType;

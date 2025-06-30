@@ -9,8 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.paper.runtime.command.SubCommand;
 import sync.voxel.engine.paper.runtime.enchantment.VoxelEnchantment;
+import sync.voxel.engine.paper.utils.item.VoxelItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,19 +60,7 @@ public class TestSubCommand extends SubCommand {
     }
 
     private @NotNull ItemStack createTestBlock() {
-        ItemStack block = new ItemStack(Material.PAPER);
-        NamespacedKey key = new NamespacedKey("voxelmeta", "material");
-
-        block.editMeta(meta -> {
-            meta.getPersistentDataContainer().set(
-                    key,
-                    PersistentDataType.STRING,
-                    "voxel:test_block"
-            );
-            meta.setCustomModelData(187);
-        });
-
-        return block;
+        return VoxelItem.edit(new ItemStack(Material.PAPER)).setVoMaterial(VoxMaterial.valueOf("voxel:test_block")).toNewItemStack();
     }
 
 

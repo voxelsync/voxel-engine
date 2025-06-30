@@ -71,6 +71,7 @@ public class ItemSendBehavior implements PacketListener {
     }
 
     private void applyName(@NotNull VoxelItem item){
+        if (item.getDisplayName() != null) return;
         String name = item.getVoMaterial().getKey().toString(); // TODO : add translations;
         item.setDisplayName(Component.text(name, TextColor.color(0xFFFFFF)).decoration(TextDecoration.ITALIC, false)); // TODO : add rarity color + custom enchant to enchant name support
     }

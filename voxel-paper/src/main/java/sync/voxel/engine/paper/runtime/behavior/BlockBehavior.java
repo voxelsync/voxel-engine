@@ -20,6 +20,7 @@ import sync.voxel.engine.paper.PaperPlugin;
 import sync.voxel.engine.paper.runtime.material.VoxelMaterial;
 import sync.voxel.engine.paper.runtime.world.VoxelBlock;
 import sync.voxel.engine.paper.runtime.world.VoxelWorld;
+import sync.voxel.engine.paper.utils.item.VoxelItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,19 +70,7 @@ public final class BlockBehavior implements Listener {
             return;
         }
 
-        String materialString = stack.getPersistentDataContainer().get(
-                new NamespacedKey("voxelmeta", "material"),
-                PersistentDataType.STRING
-        );
-
-        if (materialString == null) return;
-
-        VoxMaterial voxelMaterial;
-        try {
-            voxelMaterial = VoxelMaterial.valueOf(materialString);
-        } catch (IllegalArgumentException e) {
-            return;
-        }
+        VoxMaterial voxelMaterial = VoxelItem.edit(stack).getVoMaterial();
 
         if (!voxelMaterial.getVaMaterial().isBlock()) return;
 

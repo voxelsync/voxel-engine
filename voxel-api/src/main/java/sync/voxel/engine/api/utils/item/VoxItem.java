@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.engine.api.common;
+package sync.voxel.engine.api.utils.item;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;

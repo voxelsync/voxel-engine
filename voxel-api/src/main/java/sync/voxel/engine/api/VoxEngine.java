@@ -10,7 +10,7 @@
 package sync.voxel.engine.api;
 
 import org.bukkit.inventory.ItemStack;
-import sync.voxel.engine.api.common.VoxItem;
+import sync.voxel.engine.api.utils.item.VoxItem;
 
 public interface VoxEngine {
     VoxItem voxItemTunnel(ItemStack stack);

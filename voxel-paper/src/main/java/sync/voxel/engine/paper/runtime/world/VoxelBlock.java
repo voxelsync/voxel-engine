@@ -45,7 +45,7 @@ public class VoxelBlock {
         display.setTransformation(new Transformation(
                 new Vector3f(-offset[0] + 0.5f, -offset[1] + 0.5f, -offset[2] + 0.5f),
                 new Quaternionf(0, 0, 0, 1),
-                new Vector3f(1.0001f, 1.0001f, 1.0001f),
+                new Vector3f(1.001f, 1.001f, 1.001f),
                 new Quaternionf(0, 0, 0, 1)
         ));
     }

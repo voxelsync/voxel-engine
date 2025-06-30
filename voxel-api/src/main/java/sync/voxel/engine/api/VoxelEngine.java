@@ -12,7 +12,7 @@ package sync.voxel.engine.api;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus.*;
 import org.jspecify.annotations.NonNull;
-import sync.voxel.engine.api.common.VoxItem;
+import sync.voxel.engine.api.utils.item.VoxItem;
 
 
 public final class VoxelEngine {

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import sync.voxel.engine.api.common.VoxItem;
+import sync.voxel.engine.api.utils.item.VoxItem;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.paper.runtime.enchantment.VoxelEnchantment;
@@ -282,8 +282,8 @@ public class VoxelItem implements VoxItem {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public VoxelItem setVoMaterial(@NotNull VoxMaterial voMaterial) {
-        stack.setData(DataComponentTypes.CUSTOM_MODEL_DATA,
-                CustomModelData.customModelData().addString(voMaterial.getKey().toString()).build());
+        CustomModelData modelData = CustomModelData.customModelData().addString(voMaterial.getKey().toString()).build();
+        stack.setData(DataComponentTypes.CUSTOM_MODEL_DATA, modelData);
         applyMeta();
         return this;
     }
