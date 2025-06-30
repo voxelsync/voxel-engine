@@ -7,88 +7,95 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.api.enchantment;
+package sync.voxel.api.material;
 
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
-import sync.voxel.api.common.VoKey;
+import sync.voxel.api.common.VoxKey;
+import sync.voxel.api.common.VoxRenderType;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public interface VoEnchantment {
-    Set<VoEnchantment> enchantments = new HashSet<>();
+public interface VoxMaterial {
+    Set<VoxMaterial> materials = new HashSet<>();
 
-    // ===== ===== STATIC_ENCHANTMENT_CONTAINER ===== =====
+    // ===== ===== STATIC_MATERIAL_CONTAINER ===== =====
 
     /**
-     * Gets all registered VoEnchantment instances.
+     * Gets all registered VoMaterial instances.
      *
      * @return An unmodifiable Set of all registered materials
      */
-    static Set<VoEnchantment> values() {
-        return enchantments;
+    static Set<VoxMaterial> values() {
+        return materials;
     }
 
     /**
-     * Finds a VoEnchantment by its namespace and identifier.
+     * Finds a VoMaterial by its namespace and identifier.
      *
      * @param nameSpace The namespace to search for
      * @param identifier The identifier to search for
-     * @return The matching VoEnchantment, or null if not found
+     * @return The matching VoMaterial, or null if not found
      */
-    static VoEnchantment valueOf(String nameSpace, String identifier) {
-        return enchantments.stream()
+    static VoxMaterial valueOf(String nameSpace, String identifier) {
+        return materials.stream()
                 .filter(m -> m.getKey().toString().equals(nameSpace + ":" + identifier))
                 .findFirst()
                 .orElse(null);
     }
 
     /**
-     * Finds a VoEnchantment by its namespace:identifier.
+     * Finds a VoMaterial by its namespace:identifier.
      *
      * @param s The namespace and identifier to search for minecraft:air
-     * @return The matching VoEnchantment, or null if not found
+     * @return The matching VoMaterial, or null if not found
      */
-    static VoEnchantment valueOf(String s) {
-        return enchantments.stream()
+    static VoxMaterial valueOf(String s) {
+        return materials.stream()
                 .filter(m -> m.getKey().toString().equals(s))
                 .findFirst()
                 .orElse(null);
     }
 
     /**
-     * Finds a VoEnchantment by its namespace:identifier.
+     * Finds a VoMaterial by its namespace:identifier.
      *
      * @param key The key containing namespace and identifier, to search for minecraft:air
-     * @return The matching VoEnchantment, or null if not found
+     * @return The matching VoMaterial, or null if not found
      */
-    static VoEnchantment valueOf(VoKey key) {
-        return enchantments.stream()
+    static VoxMaterial valueOf(VoxKey key) {
+        return materials.stream()
                 .filter(m -> m.getKey().toString().equals(key.toString()))
                 .findFirst()
                 .orElse(null);
     }
 
     /**
-     * Converts a Bukkit Enchantment to its corresponding VoEnchantment.
+     * Converts a Bukkit Material to its corresponding VoMaterial.
      *
-     * @return Matching VoEnchantment or null if not found
-     * @throws IllegalArgumentException if vaEnchantment is null
+     * @param vaMaterial Bukkit Material to convert (not null)
+     * @return Matching VoMaterial or null if not found
+     * @throws IllegalArgumentException if vaMaterial is null
      */
-    static VoEnchantment valueOf(@NotNull Enchantment vaEnchantment) {
-        return valueOf(vaEnchantment.getKey().toString());
+    static VoxMaterial valueOf(@NotNull Material vaMaterial) {
+        return valueOf(vaMaterial.getKey().toString());
     }
 
-    // ===== ===== ENCHANTMENT_INSTANCE_CLASS ===== =====
+    // ===== ===== MATERIAL_INSTANCE_CLASS ===== =====
 
 
     // TODO : add docs
-    VoKey getKey();
-    
+    VoxKey getKey();
+
+    // TODO : add docs
+    Material getVaMaterial();
+
     // TODO : add docs
     int getTextureIdentifier();
 
+    // TODO : add docs
+    VoxRenderType getRenderType();
 
     /**
      * Gets a specific setting value from this material's configuration.

@@ -7,8 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import sync.voxel.api.enchantment.VoEnchantment;
-import sync.voxel.paper.PaperPlugin;
+import sync.voxel.api.enchantment.VoxEnchantment;
 import sync.voxel.paper.runtime.command.SubCommand;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.utils.ConvertUtils;
@@ -28,7 +27,7 @@ public class EnchantSubCommand extends SubCommand {
             sender.sendMessage(prefix.append(Component.text("§cYou have to specify a Action <- exception in argument 2")));
             return;
         }
-        VoEnchantment voEnchant;
+        VoxEnchantment voEnchant;
         Integer lvl;
         Player player;
         switch (args[0].toLowerCase()) {
@@ -41,11 +40,11 @@ public class EnchantSubCommand extends SubCommand {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 3")));
                     return;
                 }
-                if (VoEnchantment.valueOf(args[1]) == null) {
+                if (VoxEnchantment.valueOf(args[1]) == null) {
                     sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 3")));
                     return;
                 }
-                voEnchant = VoEnchantment.valueOf(args[1]);
+                voEnchant = VoxEnchantment.valueOf(args[1]);
                 if (args.length < 3) {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 4")));
                     return;
@@ -68,11 +67,11 @@ public class EnchantSubCommand extends SubCommand {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 3")));
                     return;
                 }
-                if (VoEnchantment.valueOf(args[1]) == null) {
+                if (VoxEnchantment.valueOf(args[1]) == null) {
                     sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 3")));
                     return;
                 }
-                voEnchant = VoEnchantment.valueOf(args[1]);
+                voEnchant = VoxEnchantment.valueOf(args[1]);
                 if (args.length < 3) {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 4")));
                     return;
@@ -95,11 +94,11 @@ public class EnchantSubCommand extends SubCommand {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment <- exception in argument 3")));
                     return;
                 }
-                if (VoEnchantment.valueOf(args[1]) == null) {
+                if (VoxEnchantment.valueOf(args[1]) == null) {
                     sender.sendMessage(prefix.append(Component.text("§cInvalid Enchantment <- exception in argument 3")));
                     return;
                 }
-                voEnchant = VoEnchantment.valueOf(args[1]);
+                voEnchant = VoxEnchantment.valueOf(args[1]);
                 if (VoxelItem.edit(player.getInventory().getItemInMainHand()).hasEnchant(voEnchant)) {
                     sender.sendMessage(prefix.append(Component.text("§cTYour Item doesn't have this Enchantment")));
                     return;
@@ -128,8 +127,8 @@ public class EnchantSubCommand extends SubCommand {
         }
         if (args.length == 3) {
             if (Arrays.asList("getbook", "add").contains(args[0].toLowerCase())) {
-                if (VoEnchantment.valueOf(args[1]) != null) {
-                    for (Integer i = 0; i < VoEnchantment.valueOf(args[1]).getAttribute("max_level", Integer.class, 1)+1; i++) {
+                if (VoxEnchantment.valueOf(args[1]) != null) {
+                    for (Integer i = 0; i < VoxEnchantment.valueOf(args[1]).getAttribute("max_level", Integer.class, 1)+1; i++) {
                         list.add(i.toString());
                     }
                 }
@@ -142,7 +141,7 @@ public class EnchantSubCommand extends SubCommand {
         super(key);
     }
 
-    public ItemStack getBook(VoEnchantment enchant, Integer level) {
+    public ItemStack getBook(VoxEnchantment enchant, Integer level) {
         return VoxelItem.edit(new ItemStack(Material.ENCHANTED_BOOK)).addEnchant(enchant, level).stack();
     }
 }

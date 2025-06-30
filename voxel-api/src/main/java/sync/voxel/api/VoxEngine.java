@@ -9,5 +9,9 @@
  */
 package sync.voxel.api;
 
-public interface VoEngine {
+import org.bukkit.inventory.ItemStack;
+import sync.voxel.api.common.VoxItem;
+
+public interface VoxEngine {
+    VoxItem voxItemTunnel(ItemStack stack);
 }

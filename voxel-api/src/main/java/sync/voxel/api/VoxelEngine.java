@@ -9,12 +9,16 @@
  */
 package sync.voxel.api;
 
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus.*;
 import org.jspecify.annotations.NonNull;
+import sync.voxel.api.common.VoxItem;
 
 
 public final class VoxelEngine {
-    private static VoEngine engine = null;
+    private static VoxEngine engine = null;
+
+    // ===== CLASS PROVIDER =====
 
     private static final class NotLoadedException extends IllegalStateException {
         private static final String MESSAGE = """
@@ -32,14 +36,14 @@ public final class VoxelEngine {
         }
     }
 
-    public static @NonNull VoEngine getEngine() {
-        VoEngine engine = VoxelEngine.engine;
+    public static @NonNull VoxEngine getEngine() {
+        VoxEngine engine = VoxelEngine.engine;
         if (engine == null) throw new NotLoadedException();
         return engine;
     }
 
     @Internal
-    public static void register(VoEngine engine) {
+    public static void register(VoxEngine engine) {
         VoxelEngine.engine = engine;
     }
 
@@ -51,6 +55,13 @@ public final class VoxelEngine {
     @Internal
     private VoxelEngine() {
         throw new UnsupportedOperationException("This class cannot be instantiated.");
+    }
+
+    // ===== VO_ENGINE TUNNEL =====
+
+
+    public static VoxItem voxItemTunnel(ItemStack stack) {
+        return engine.voxItemTunnel(stack);
     }
 
 }

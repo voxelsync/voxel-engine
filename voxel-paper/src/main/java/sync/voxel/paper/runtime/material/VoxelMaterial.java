@@ -12,57 +12,57 @@ package sync.voxel.paper.runtime.material;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import sync.voxel.api.common.VoKey;
-import sync.voxel.api.common.VoRenderType;
-import sync.voxel.api.material.VoMaterial;
+import sync.voxel.api.common.VoxKey;
+import sync.voxel.api.common.VoxRenderType;
+import sync.voxel.api.material.VoxMaterial;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class VoxelMaterial implements VoMaterial {
+public class VoxelMaterial implements VoxMaterial {
 
     private final Material vaMaterial;
-    private final VoKey key;
-    private final VoRenderType renderType;
+    private final VoxKey key;
+    private final VoxRenderType renderType;
     private final Map<String, Object> nbt = new HashMap<>();
 
-    public static Set<VoMaterial> values() {
+    public static Set<VoxMaterial> values() {
         return materials;
     }
 
-    public static VoMaterial valueOf(String nameSpace, String identifier) {
+    public static VoxMaterial valueOf(String nameSpace, String identifier) {
         return materials.stream()
                 .filter(m -> m.getKey().toString().equals(nameSpace + ":" + identifier))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static VoMaterial valueOf(String s) {
+    public static VoxMaterial valueOf(String s) {
         return materials.stream()
                 .filter(m -> m.getKey().toString().equals(s))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static VoMaterial valueOf(VoKey key) {
+    public static VoxMaterial valueOf(VoxKey key) {
         return materials.stream()
                 .filter(m -> m.getKey().toString().equals(key.toString()))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static VoMaterial valueOf(@NotNull Material vaMaterial) {
+    public static VoxMaterial valueOf(@NotNull Material vaMaterial) {
         return valueOf(vaMaterial.getKey().toString());
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    public static @NotNull VoxelMaterial forkMaterial(Material vaMaterial, VoKey key, VoRenderType renderType) {
+    public static @NotNull VoxelMaterial forkMaterial(Material vaMaterial, VoxKey key, VoxRenderType renderType) {
         return new VoxelMaterial(vaMaterial, key, renderType);
     }
 
 
-    public VoxelMaterial(Material vaMaterial, VoKey key, VoRenderType renderType) {
+    public VoxelMaterial(Material vaMaterial, VoxKey key, VoxRenderType renderType) {
         this.renderType = renderType;
         this.vaMaterial = vaMaterial;
         this.key = key;
@@ -70,7 +70,7 @@ public class VoxelMaterial implements VoMaterial {
     }
 
     @Override
-    public VoKey getKey() {
+    public VoxKey getKey() {
         return key;
     }
 
@@ -85,7 +85,7 @@ public class VoxelMaterial implements VoMaterial {
     }
 
     @Override
-    public VoRenderType getRenderType() {
+    public VoxRenderType getRenderType() {
         return renderType;
     }
 

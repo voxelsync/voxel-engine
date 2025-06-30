@@ -6,57 +6,57 @@ import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import sync.voxel.api.common.VoKey;
-import sync.voxel.api.enchantment.VoEnchantment;
+import sync.voxel.api.common.VoxKey;
+import sync.voxel.api.enchantment.VoxEnchantment;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class VoxelEnchantment implements VoEnchantment {
+public class VoxelEnchantment implements VoxEnchantment {
 
     public static final Registry<@NotNull Enchantment> VANILLA_ENCHANTMENTS = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
 
-    private final VoKey key;
+    private final VoxKey key;
     private final Map<String, Object> nbt = new HashMap<>();
 
-    public static Set<VoEnchantment> values() {
+    public static Set<VoxEnchantment> values() {
         return enchantments;
     }
 
-    public static VoEnchantment valueOf(String nameSpace, String identifier) {
+    public static VoxEnchantment valueOf(String nameSpace, String identifier) {
         return enchantments.stream()
                 .filter(e -> e.getKey().toString().equals(nameSpace + ":" + identifier))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static VoEnchantment valueOf(String s) {
+    public static VoxEnchantment valueOf(String s) {
         return enchantments.stream()
                 .filter(e -> e.getKey().toString().equals(s))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static VoEnchantment valueOf(VoKey key) {
+    public static VoxEnchantment valueOf(VoxKey key) {
         return enchantments.stream()
                 .filter(e -> e.getKey().toString().equals(key.toString()))
                 .findFirst()
                 .orElse(null);
     }
 
-    public static VoEnchantment valueOf(@NotNull Enchantment vaEnchantment) {
+    public static VoxEnchantment valueOf(@NotNull Enchantment vaEnchantment) {
         return valueOf(vaEnchantment.getKey().toString());
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull VoEnchantment forkEnchantment(VoKey key) {
+    public static @NotNull VoxEnchantment forkEnchantment(VoxKey key) {
         return new VoxelEnchantment(key);
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull VoEnchantment editEnchantment(@NotNull Enchantment enchantment) {
-        return VoEnchantment.valueOf(enchantment.getKey().toString());
+    public static @NotNull VoxEnchantment editEnchantment(@NotNull Enchantment enchantment) {
+        return VoxEnchantment.valueOf(enchantment.getKey().toString());
     }
 
     public static @NotNull String getRomanInteger(Integer number) {
@@ -82,13 +82,13 @@ public class VoxelEnchantment implements VoEnchantment {
         return roman.toString();
     }
 
-    public VoxelEnchantment(VoKey key) {
+    public VoxelEnchantment(VoxKey key) {
         this.key = key;
         enchantments.add(this);
     }
 
     @Override
-    public VoKey getKey() {
+    public VoxKey getKey() {
         return key;
     }
 

@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
-import sync.voxel.api.material.VoMaterial;
+import sync.voxel.api.material.VoxMaterial;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
 import sync.voxel.paper.runtime.world.VoxelBlock;
@@ -76,7 +76,7 @@ public final class BlockBehavior implements Listener {
 
         if (materialString == null) return;
 
-        VoMaterial voxelMaterial;
+        VoxMaterial voxelMaterial;
         try {
             voxelMaterial = VoxelMaterial.valueOf(materialString);
         } catch (IllegalArgumentException e) {

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see NamespacedKey
  */
-public record VoKey(String namespace, String identifier) {
+public record VoxKey(String namespace, String identifier) {
 
     /**
      * Creates a VoKey from a combined string in the format "namespace:identifier".
@@ -30,7 +30,7 @@ public record VoKey(String namespace, String identifier) {
      * @throws IllegalArgumentException if the format is invalid or contains illegal characters
      */
     @Contract("_ -> new")
-    public static @NotNull VoKey of(@NotNull String combined) {
+    public static @NotNull VoxKey of(@NotNull String combined) {
         String[] parts = combined.split(":", 2);
         if (parts.length != 2) {
             throw new IllegalArgumentException("Key must be in format 'namespace:identifier'");
@@ -47,7 +47,7 @@ public record VoKey(String namespace, String identifier) {
             throw new IllegalArgumentException("Invalid identifier: " + identifier);
         }
 
-        return new VoKey(namespace, identifier);
+        return new VoxKey(namespace, identifier);
     }
 
     /**
@@ -57,7 +57,7 @@ public record VoKey(String namespace, String identifier) {
      * @return a new VoKey instance
      */
     @Contract("_ -> new")
-    public static @NotNull VoKey of(@NotNull NamespacedKey key) {
+    public static @NotNull VoxKey of(@NotNull NamespacedKey key) {
         return of(key.toString());
     }
 
@@ -127,7 +127,7 @@ public record VoKey(String namespace, String identifier) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        VoKey voKey = (VoKey) o;
+        VoxKey voKey = (VoxKey) o;
         return namespace.equals(voKey.namespace) && identifier.equals(voKey.identifier);
     }
 

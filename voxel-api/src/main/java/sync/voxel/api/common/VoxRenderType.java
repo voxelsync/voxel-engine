@@ -1,6 +1,6 @@
 package sync.voxel.api.common;
 
-public enum VoRenderType {
+public enum VoxRenderType {
     ITEM_MODEL_ID,
     ITEM_TEXTURE_ID,
     BLOCK_MODEL_ID,

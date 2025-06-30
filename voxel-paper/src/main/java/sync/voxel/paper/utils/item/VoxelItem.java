@@ -1,21 +1,32 @@
+/**
+ * VOXEL-LICENSE NOTICE
+ * <br><br>
+ * This software is part of VoxelSync under the Voxel Public License. <br>
+ * Source at: <a href="https://github.com/voxelsync/voxel/blob/main/LICENSE">GITHUB</a>
+ * <br><br>
+ * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
+ * Copyright (c) contributors
+ */
 package sync.voxel.paper.utils.item;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
+
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sync.voxel.api.enchantment.VoEnchantment;
-import sync.voxel.api.material.VoMaterial;
+
+import sync.voxel.api.common.VoxItem;
+import sync.voxel.api.enchantment.VoxEnchantment;
+import sync.voxel.api.material.VoxMaterial;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.runtime.material.VoxelMaterial;
 
@@ -23,9 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class VoxelItem {
+public class VoxelItem implements VoxItem {
 
-    private VoMaterial voMaterial;
+    private VoxMaterial voMaterial;
 
     private final ItemStack stack;
     private ItemMeta meta;
@@ -45,7 +56,6 @@ public class VoxelItem {
     public static @NotNull VoxelItem clone(@NotNull ItemStack item) {
         return new VoxelItem(item.clone());
     }
-
     private VoxelItem(@NotNull ItemStack stack) {
         this.stack = stack;
         this.meta = stack.getItemMeta();
@@ -54,16 +64,19 @@ public class VoxelItem {
         updateEnchantmentItem();
     }
 
+    @Override
     public ItemStack toNewItemStack() {
         applyMeta();
         return stack.clone();
     }
 
+    @Override
     public ItemStack stack() {
         applyMeta();
         return stack;
     }
 
+    @Override
     public ItemMeta meta() {
         updateMeta();
         return meta;
@@ -92,13 +105,15 @@ public class VoxelItem {
 
     // ===== PERSISTENT DATA CONTAINER METHODS =====
 
+    @Override
     @NotNull
     public VoxelItem setPersistentData(@NotNull String key, @NotNull PersistentDataType<?, ?> type, @NotNull Object value) {
         return setPersistentData(voMaterial.getKey().toString(), key, type, value);
     }
 
+    @Override
     @NotNull
-    private VoxelItem setPersistentData(@NotNull String namespace, @NotNull String key, @NotNull PersistentDataType<?, ?> type, @NotNull Object value) {
+    public VoxelItem setPersistentData(@NotNull String namespace, @NotNull String key, @NotNull PersistentDataType<?, ?> type, @NotNull Object value) {
         updateMeta();
         NamespacedKey namespacedKey = new NamespacedKey(namespace, key);
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
@@ -128,11 +143,13 @@ public class VoxelItem {
         return this;
     }
 
+    @Override
     @NotNull
     public VoxelItem removePersistentData(@NotNull String key) {
         return removePersistentData(voMaterial.getKey().toString(), key);
     }
 
+    @Override
     @NotNull
     public VoxelItem removePersistentData(@NotNull String namespace, @NotNull String key) {
         updateMeta();
@@ -142,11 +159,13 @@ public class VoxelItem {
         return this;
     }
 
+    @Override
     @Nullable
     public <T> T getPersistentData(@NotNull String key, @NotNull PersistentDataType<?, T> type) {
         return getPersistentData(voMaterial.getKey().toString(), key, type);
     }
 
+    @Override
     @Nullable
     public <T> T getPersistentData(@NotNull String namespace, @NotNull String key, @NotNull PersistentDataType<?, T> type) {
         updateMeta();
@@ -155,10 +174,12 @@ public class VoxelItem {
         return pdc.get(namespacedKey, type);
     }
 
+    @Override
     public boolean hasPersistentData(@NotNull String key) {
         return hasPersistentData(voMaterial.getKey().toString(), key);
     }
 
+    @Override
     public boolean hasPersistentData(@NotNull String namespace, @NotNull String key) {
         updateMeta();
         NamespacedKey namespacedKey = new NamespacedKey(namespace, key);
@@ -169,7 +190,8 @@ public class VoxelItem {
 
     // ===== VOXEL ENCHANTMENT METHODS =====
 
-    public VoxelItem addEnchant(@NotNull VoEnchantment voEnchant, @NotNull Integer level) {
+    @Override
+    public VoxelItem addEnchant(@NotNull VoxEnchantment voEnchant, @NotNull Integer level) {
         Objects.requireNonNull(voEnchant, "VoxelEnchantment cannot be null");
         Objects.requireNonNull(level, "Enchantment level cannot be null");
         updateMeta();
@@ -193,7 +215,8 @@ public class VoxelItem {
         return this;
     }
 
-    public VoxelItem removeEnchant(@NotNull VoEnchantment voEnchant) {
+    @Override
+    public VoxelItem removeEnchant(@NotNull VoxEnchantment voEnchant) {
         Objects.requireNonNull(voEnchant, "VoxelEnchantment cannot be null");
         updateMeta();
 
@@ -217,7 +240,8 @@ public class VoxelItem {
         return this;
     }
 
-    public boolean hasEnchant(@NotNull VoEnchantment enchant) {
+    @Override
+    public boolean hasEnchant(@NotNull VoxEnchantment enchant) {
         Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
 
         updateMeta();
@@ -231,7 +255,7 @@ public class VoxelItem {
         updateMeta();
         if (!meta.getEnchants().isEmpty()) return true;
 
-        for (VoEnchantment enchant : VoxelEnchantment.values()) {
+        for (VoxEnchantment enchant : VoxelEnchantment.values()) {
             NamespacedKey key = new NamespacedKey("voxelenchant", enchant.getKey().toString('/'));
             if (meta.getPersistentDataContainer().has(key)) {
                 return true;
@@ -241,7 +265,8 @@ public class VoxelItem {
         return false;
     }
 
-    public int getEnchantLevel(@NotNull VoEnchantment enchant) {
+    @Override
+    public int getEnchantLevel(@NotNull VoxEnchantment enchant) {
         Objects.requireNonNull(enchant, "VoxelEnchantment cannot be null");
 
         updateMeta();
@@ -254,16 +279,18 @@ public class VoxelItem {
 
     // ===== VOXEL MATERIAL METHODS =====
 
+    @Override
     @SuppressWarnings("UnstableApiUsage")
-    public VoxelItem setVoMaterial(@NotNull VoMaterial voMaterial) {
+    public VoxelItem setVoMaterial(@NotNull VoxMaterial voMaterial) {
         stack.setData(DataComponentTypes.CUSTOM_MODEL_DATA,
                 CustomModelData.customModelData().addString(voMaterial.getKey().toString()).build());
         applyMeta();
         return this;
     }
 
+    @Override
     @SuppressWarnings("UnstableApiUsage")
-    public VoMaterial getVoMaterial() {
+    public VoxMaterial getVoMaterial() {
         updateMeta();
         CustomModelData data = stack.getData(DataComponentTypes.CUSTOM_MODEL_DATA);
         String id = data != null && !data.strings().isEmpty()
@@ -274,27 +301,33 @@ public class VoxelItem {
 
     // ===== ITEM LORE METHODS =====
 
+    @Override
     public List<Component> getLore() {
         updateLore();
         return lore;
     }
 
+    @Override
     public void setLore(List<Component> lore) {
         this.lore = lore;
         applyLore();
     }
 
+    @Override
     public Component getLoreLine(int index) {
         updateLore();
         return lore.get(index);
     }
 
+    @Override
     public VoxelItem addLoreLine(Component line) {
         updateLore();
         lore.add(line);
         applyLore();
         return this;
     }
+
+    @Override
     public VoxelItem addLoreLine(int index ,Component line) {
         updateLore();
         lore.add(index, line);
@@ -302,6 +335,7 @@ public class VoxelItem {
         return this;
     }
 
+    @Override
     public VoxelItem setLoreLine(int index, Component line) {
         updateLore();
         if (line != null) {
@@ -313,12 +347,15 @@ public class VoxelItem {
         return this;
     }
 
+    @Override
     public VoxelItem removeLoreLine(int index) {
         updateLore();
         lore.remove(index);
         applyLore();
         return this;
     }
+
+    @Override
     public VoxelItem removeLastLoreLine() {
         updateLore();
         lore.removeLast();
@@ -326,6 +363,7 @@ public class VoxelItem {
         return this;
     }
 
+    @Override
     public VoxelItem removeLoreLine(Component line) {
         updateLore();
         lore.removeIf(l1 -> l1.equals(line));
@@ -335,12 +373,14 @@ public class VoxelItem {
 
     // ===== ITEM NAME / DISPLAY_NAME METHODS =====
 
+    @Override
     public VoxelItem setDisplayName(Component name){
         meta.displayName(name);
         applyMeta();
         return this;
     }
 
+    @Override
     public Component getDisplayName(){
         updateMeta();
         return meta.displayName();

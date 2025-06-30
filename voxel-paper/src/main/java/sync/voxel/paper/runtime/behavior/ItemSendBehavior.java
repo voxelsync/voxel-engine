@@ -19,7 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
-import sync.voxel.api.enchantment.VoEnchantment;
+import sync.voxel.api.enchantment.VoxEnchantment;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.utils.item.VoxelItem;
 
@@ -78,10 +78,10 @@ public class ItemSendBehavior implements PacketListener {
     private void applyEnchantments(@NotNull VoxelItem item){
         List<Component> lore = item.getLore();
 
-        List<VoEnchantment> enchantments = new ArrayList<>(VoEnchantment.values().stream().toList());
+        List<VoxEnchantment> enchantments = new ArrayList<>(VoxEnchantment.values().stream().toList());
         Collections.reverse(enchantments);
 
-        for (VoEnchantment enchantment : enchantments) {
+        for (VoxEnchantment enchantment : enchantments) {
             int level = item.getEnchantLevel(enchantment);
             if (level == 0) continue;
 

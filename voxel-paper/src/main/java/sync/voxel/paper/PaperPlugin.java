@@ -16,11 +16,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 import sync.voxel.api.VoxelEngine;
-import sync.voxel.api.common.VoKey;
-import sync.voxel.api.common.VoRenderType;
+import sync.voxel.api.common.VoxKey;
+import sync.voxel.api.common.VoxRenderType;
 import sync.voxel.paper.builder.vaconverter.VanillaConverter;
 import sync.voxel.paper.runtime.behavior.BlockBehavior;
 import sync.voxel.paper.runtime.behavior.ItemSendBehavior;
@@ -52,8 +50,8 @@ public class PaperPlugin extends JavaPlugin {
 
         PacketEvents.getAPI().getEventManager().registerListener(new ItemSendBehavior(), PacketListenerPriority.NORMAL);
 
-        VoxelEnchantment.forkEnchantment(VoKey.of("voxel:vein_ming"));
-        VoxelMaterial.forkMaterial(Material.STONE, VoKey.of("voxel:test_block"), VoRenderType.BLOCK_TEXTURE_ID);
+        VoxelEnchantment.forkEnchantment(VoxKey.of("voxel:vein_ming"));
+        VoxelMaterial.forkMaterial(Material.STONE, VoxKey.of("voxel:test_block"), VoxRenderType.BLOCK_TEXTURE_ID);
 
         MainCommand mainCommand = new MainCommand();
         mainCommand.registerSubCommands();

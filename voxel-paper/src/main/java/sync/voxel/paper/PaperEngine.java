@@ -9,8 +9,15 @@
  */
 package sync.voxel.paper;
 
-import sync.voxel.api.VoEngine;
+import org.bukkit.inventory.ItemStack;
+import sync.voxel.api.VoxEngine;
+import sync.voxel.api.common.VoxItem;
+import sync.voxel.paper.utils.item.VoxelItem;
 
-public class PaperEngine implements VoEngine {
+public class PaperEngine implements VoxEngine {
 
+    @Override
+    public VoxItem voxItemTunnel(ItemStack stack) {
+        return VoxelItem.edit(stack);
+    }
 }

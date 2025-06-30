@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import sync.voxel.api.enchantment.VoEnchantment;
+import sync.voxel.api.enchantment.VoxEnchantment;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.paper.utils.item.VoxelItem;
@@ -41,7 +41,7 @@ public final class EnchantmentBehavior implements Listener {
             return;
         }
 
-        for (VoEnchantment voEnchant : VoxelEnchantment.values()) {
+        for (VoxEnchantment voEnchant : VoxelEnchantment.values()) {
             if (!EnchantmentTarget.valueOf(voEnchant.getAttribute("enchantment_target", String.class, "tool")).includes(firstItem)) {
                 continue;
             }
