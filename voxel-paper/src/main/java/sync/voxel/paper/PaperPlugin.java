@@ -67,13 +67,4 @@ public class PaperPlugin extends JavaPlugin {
         PacketEvents.getAPI().terminate();
     }
 
-    @Contract(pure = true)
-    public static @Nullable Integer getInt(String input) {
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            return null; // Falls die Eingabe ungültig ist
-        }
-    }
-
 }

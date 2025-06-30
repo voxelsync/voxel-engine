@@ -6,10 +6,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import sync.voxel.api.enchantment.VoEnchantment;
 import sync.voxel.paper.PaperPlugin;
 import sync.voxel.paper.runtime.command.SubCommand;
 import sync.voxel.paper.runtime.enchantment.VoxelEnchantment;
+import sync.voxel.paper.utils.ConvertUtils;
 import sync.voxel.paper.utils.item.VoxelItem;
 
 import java.util.ArrayList;
@@ -48,11 +50,11 @@ public class EnchantSubCommand extends SubCommand {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 4")));
                     return;
                 }
-                if (PaperPlugin.getInt(args[2]) == null) {
+                if (ConvertUtils.getInt(args[2]).isEmpty()) {
                     sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 4")));
                     return;
                 }
-                lvl = PaperPlugin.getInt(args[2]);
+                lvl = ConvertUtils.getInt(args[2]).orElse(0);
                 player = (Player) sender;
                 player.getInventory().addItem(getBook(voEnchant, lvl > 255 ? 255 : lvl));
                 break;
@@ -75,11 +77,11 @@ public class EnchantSubCommand extends SubCommand {
                     sender.sendMessage(prefix.append(Component.text("§cYou have to specify an Enchantment Level <- exception in argument 4")));
                     return;
                 }
-                if (PaperPlugin.getInt(args[2]) == null) {
+                if (ConvertUtils.getInt(args[2]).isEmpty()) {
                     sender.sendMessage(prefix.append(Component.text("§cInvalid Number <- exception in argument 4")));
                     return;
                 }
-                lvl = PaperPlugin.getInt(args[2]);
+                lvl = ConvertUtils.getInt(args[2]).orElse(0);
                 player = (Player) sender;
                 VoxelItem.edit(player.getInventory().getItemInMainHand()).addEnchant(voEnchant, lvl);
                 break;
@@ -112,7 +114,7 @@ public class EnchantSubCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getTabCompleter(String[] args, CommandSender sender, Command command) {
+    public List<String> getTabCompleter(String @NotNull [] args, CommandSender sender, Command command) {
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             list.add("getBook");
