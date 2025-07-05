@@ -3,6 +3,7 @@ package sync.voxel.engine.paper.runtime.world;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -14,11 +15,14 @@ import org.joml.Quaternionf;
 import org.joml.Random;
 import org.joml.Vector3f;
 
+import java.util.Arrays;
+
 @Getter @Setter
 public class VoxelBlock {
     private Location location;
     private final ItemDisplay display; // use item for custom model data
     private final ItemStack stack;
+    private float scale = 1.001f;
     private int[] offset = new int[]{0, 0, 0};
 
     public VoxelBlock(@NotNull Location location, @NotNull ItemStack stack) {
@@ -40,12 +44,15 @@ public class VoxelBlock {
 
     public void updateDisplay(@NotNull ItemDisplay display, Location airLoc) {
         offset = getBestOffset(airLoc);
+        scale = Arrays.equals(offset, new int[]{0, 0, 0}) ? 0.999f : 1.001f;
+
         display.setItemStack(stack);
         display.teleport(location.clone().add(offset[0], offset[1], offset[2]), PlayerTeleportEvent.TeleportCause.EXIT_BED);
+
         display.setTransformation(new Transformation(
                 new Vector3f(-offset[0] + 0.5f, -offset[1] + 0.5f, -offset[2] + 0.5f),
                 new Quaternionf(0, 0, 0, 1),
-                new Vector3f(1.001f, 1.001f, 1.001f),
+                new Vector3f(scale, scale, scale),
                 new Quaternionf(0, 0, 0, 1)
         ));
     }
