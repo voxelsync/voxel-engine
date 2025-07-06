@@ -23,6 +23,7 @@ import sync.voxel.engine.api.common.VoxKey;
 import sync.voxel.engine.api.common.VoxRenderType;
 import sync.voxel.engine.paper.builder.vaconverter.VanillaConverter;
 import sync.voxel.engine.paper.runtime.behavior.BlockBehavior;
+import sync.voxel.engine.paper.runtime.behavior.EnchantmentBehavior;
 import sync.voxel.engine.paper.runtime.behavior.ItemBehavior;
 import sync.voxel.engine.paper.runtime.command.MainCommand;
 import sync.voxel.engine.paper.runtime.enchantment.VoxelEnchantment;
@@ -48,9 +49,8 @@ public class PaperPlugin extends JavaPlugin {
         PacketEvents.getAPI().init();
         VanillaConverter.convert();
         BlockBehavior.register();
+        EnchantmentBehavior.register();
         Text.registerLangDirectory("https://voxelsync.github.io/translation/");
-
-        PacketEvents.getAPI().getEventManager().registerListener(new ItemBehavior(), PacketListenerPriority.NORMAL);
 
         VoxelEnchantment.forkEnchantment(VoxKey.of("voxel:vein_ming"));
         VoxelMaterial.forkMaterial(Material.STONE, VoxKey.of("voxel:test_block"), VoxRenderType.BLOCK_TEXTURE_ID);

@@ -1,6 +1,8 @@
 package sync.voxel.engine.paper.runtime.behavior;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
@@ -25,12 +27,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
+import sync.voxel.engine.paper.PaperPlugin;
 import sync.voxel.engine.paper.runtime.enchantment.VoxelEnchantment;
 import sync.voxel.engine.paper.utils.item.VoxelItem;
 
 import java.util.*;
 
-public class ItemBehavior implements PacketListener {
+public final class ItemBehavior implements PacketListener {
+
+    private static ItemBehavior instance;
+
+    private ItemBehavior() {}
+
+    public static void register() {
+        if (instance == null) {
+            instance = new ItemBehavior();
+            PacketEvents.getAPI().getEventManager().registerListener(instance, PacketListenerPriority.NORMAL);
+        }
+    }
 
     @Override
     public void onPacketSend(@NotNull PacketSendEvent event) {

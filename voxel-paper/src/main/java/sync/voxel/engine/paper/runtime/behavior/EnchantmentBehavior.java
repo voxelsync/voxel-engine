@@ -16,14 +16,19 @@ import sync.voxel.engine.paper.utils.item.VoxelItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public final class EnchantmentBehavior implements Listener {
 
-    public static EnchantmentBehavior enchantmentBehavior;
+    private static EnchantmentBehavior instance;
+
+    private EnchantmentBehavior() {}
 
     public static void register() {
-        if (enchantmentBehavior == null) EnchantmentBehavior.enchantmentBehavior = new EnchantmentBehavior();
-        Bukkit.getServer().getPluginManager().registerEvents(enchantmentBehavior, PaperPlugin.getPlugin(PaperPlugin.class));
+        if (instance == null) {
+            instance = new EnchantmentBehavior();
+            Bukkit.getServer().getPluginManager().registerEvents(instance, PaperPlugin.getPlugin(PaperPlugin.class));
+        }
     }
 
     @EventHandler
@@ -31,62 +36,132 @@ public final class EnchantmentBehavior implements Listener {
         ItemStack firstItem = event.getInventory().getItem(0);
         ItemStack secondItem = event.getInventory().getItem(1);
         ItemStack result = event.getResult();
-        assert firstItem != null;
 
-        if (result == null) return;
-        if (secondItem == null) return;
-
-        if (firstItem.getType().equals(secondItem.getType()) || secondItem.getType().equals(Material.ENCHANTED_BOOK)) {
-            result = combineTwoItems(event, firstItem, secondItem, result);
-            System.out.println("haha ");
+        if (firstItem == null || secondItem == null || result == null) {
+            return;
         }
-        System.out.println("out und so fertuig");
-        event.setResult(result);
+
+        if (canCombineItems(firstItem, secondItem)) {
+            ItemStack newResult = combineItems(firstItem, secondItem, result);
+            event.setResult(newResult);
+        }
     }
 
-    private @Nullable ItemStack combineTwoItems(PrepareAnvilEvent event, ItemStack firstItem, ItemStack secondItem, ItemStack result){
-        for (VoxEnchantment voEnchant : VoxelEnchantment.values()) {
-            if (!EnchantmentTarget.valueOf(voEnchant.getAttribute("enchantment-target", String.class, "tool")).includes(firstItem)) {
-                continue;
-            }
+    private boolean canCombineItems(@NotNull ItemStack firstItem, @NotNull ItemStack secondItem) {
+        if (firstItem.getType().equals(secondItem.getType())) {
+            return true;
+        }
 
-            boolean firstHas = VoxelItem.edit(firstItem).hasEnchant(voEnchant);
-            boolean secondHas = VoxelItem.edit(secondItem).hasEnchant(voEnchant);
+        return secondItem.getType().equals(Material.ENCHANTED_BOOK);
+    }
 
-            System.out.println("firstItemHas: " + firstItem + " secondItemHas: " + secondHas);
+    private @Nullable ItemStack combineItems(@NotNull ItemStack firstItem, @NotNull ItemStack secondItem, @NotNull ItemStack result) {
+        ItemStack finalResult = result.clone();
 
-            if (firstHas && secondHas) {
-                int firstEnchantLevel = VoxelItem.edit(firstItem).getEnchantLevel(voEnchant);
-                int secondEnchantLevel = VoxelItem.edit(secondItem).getEnchantLevel(voEnchant);
-                int combined = combineEnchantLevel(firstEnchantLevel, secondEnchantLevel, voEnchant.getAttribute("max-level", Integer.class, 1));
-                VoxelItem.edit(result).addEnchant(voEnchant, combined);
-                continue;
-            }
-
-            if (!firstHas && secondHas) {
-                //noinspection unchecked
-                for (String incompatibleEnchant : (List<String>) voEnchant.getAttribute("incompatible-enchants", List.class, new ArrayList<>())) {
-                    if (VoxelItem.edit(firstItem).hasEnchant(VoxelEnchantment.valueOf(incompatibleEnchant))) return null;
+        for (VoxEnchantment voxEnchant : VoxelEnchantment.values()) {
+            try {
+                if (!isEnchantmentApplicable(voxEnchant, firstItem, secondItem)) {
+                    continue;
                 }
 
-                int level = VoxelItem.edit(secondItem).getEnchantLevel(voEnchant);
-                VoxelItem.edit(result).addEnchant(voEnchant, level);
+                boolean firstHasEnchant = VoxelItem.edit(firstItem).hasEnchant(voxEnchant);
+                boolean secondHasEnchant = VoxelItem.edit(secondItem).hasEnchant(voxEnchant);
+
+                if (firstHasEnchant && secondHasEnchant) {
+                    if (!combineEnchantmentLevels(voxEnchant, firstItem, secondItem, finalResult)) {
+                        return null;
+                    }
+                } else if (firstHasEnchant) {
+                    if (!transferEnchantment(voxEnchant, firstItem, finalResult)) {
+                        return null;
+                    }
+                } else if (secondHasEnchant) {
+                    if (!addEnchantmentFromSecondItem(voxEnchant, firstItem, secondItem, finalResult)) {
+                        return null;
+                    }
+                }
+
+            } catch (Exception e) {
+                Bukkit.getServer().getLogger().log(Level.WARNING, "Fehler beim Verarbeiten von Enchantment " + voxEnchant.getKey(), e);
+                continue;
             }
         }
 
-        return result;
+        return finalResult;
     }
 
+    private boolean isEnchantmentApplicable(@NotNull VoxEnchantment voxEnchant, @NotNull ItemStack firstItem, @NotNull ItemStack secondItem) {
+        try {
+            String targetString = voxEnchant.getAttribute("enchantment-target", String.class, "TOOL");
+            EnchantmentTarget target = EnchantmentTarget.valueOf(targetString.toUpperCase());
 
-    private int combineEnchantLevel(int l1, int l2, int maxLevel) {
-        if (l1 > l2) {
-            return l1;
-        } else if (l2 > l1) {
-            return l2;
+            if (secondItem.getType() == Material.ENCHANTED_BOOK) {
+                return target.includes(firstItem);
+            }
+
+            return target.includes(firstItem) && target.includes(secondItem);
+
+        } catch (IllegalArgumentException e) {
+            return false;
         }
-        
-        return l1+1 <= maxLevel ? l1+1 : l1;
     }
 
+    private boolean combineEnchantmentLevels(@NotNull VoxEnchantment voxEnchant, @NotNull ItemStack firstItem, @NotNull ItemStack secondItem, @NotNull ItemStack result) {
+        int firstLevel = VoxelItem.edit(firstItem).getEnchantLevel(voxEnchant);
+        int secondLevel = VoxelItem.edit(secondItem).getEnchantLevel(voxEnchant);
+        int maxLevel = voxEnchant.getAttribute("max-level", Integer.class, 1);
 
+        int combinedLevel = calculateCombinedLevel(firstLevel, secondLevel, maxLevel);
+
+        VoxelItem.edit(result).addEnchant(voxEnchant, combinedLevel);
+        return true;
+    }
+
+    private boolean transferEnchantment(@NotNull VoxEnchantment voxEnchant, @NotNull ItemStack sourceItem, @NotNull ItemStack result) {
+        int level = VoxelItem.edit(sourceItem).getEnchantLevel(voxEnchant);
+        VoxelItem.edit(result).addEnchant(voxEnchant, level);
+        return true;
+    }
+
+    private boolean addEnchantmentFromSecondItem(@NotNull VoxEnchantment voxEnchant, @NotNull ItemStack firstItem, @NotNull ItemStack secondItem, @NotNull ItemStack result) {
+        // Prüfe Inkompatibilitäten mit bereits vorhandenen Enchantments
+        if (!isEnchantmentCompatible(voxEnchant, firstItem, result)) {
+            return false;
+        }
+
+        int level = VoxelItem.edit(secondItem).getEnchantLevel(voxEnchant);
+        VoxelItem.edit(result).addEnchant(voxEnchant, level);
+        return true;
+    }
+
+    private boolean isEnchantmentCompatible(@NotNull VoxEnchantment voxEnchant, @NotNull ItemStack firstItem, @NotNull ItemStack result) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> incompatibleEnchants = (List<String>) voxEnchant.getAttribute("incompatible-enchants", List.class, new ArrayList<>());
+
+            for (String incompatibleEnchantName : incompatibleEnchants) {
+                try {
+                    VoxEnchantment incompatibleEnchant = VoxelEnchantment.valueOf(incompatibleEnchantName);
+
+                    if (VoxelItem.edit(firstItem).hasEnchant(incompatibleEnchant) ||
+                            VoxelItem.edit(result).hasEnchant(incompatibleEnchant)) {
+                        return false;
+                    }
+                } catch (IllegalArgumentException _) {}
+            }
+
+            return true;
+
+        } catch (ClassCastException e) {
+            return true;
+        }
+    }
+
+    private int calculateCombinedLevel(int level1, int level2, int maxLevel) {
+        if (level1 == level2) {
+            return Math.min(level1 + 1, maxLevel);
+        } else {
+            return Math.max(level1, level2);
+        }
+    }
 }

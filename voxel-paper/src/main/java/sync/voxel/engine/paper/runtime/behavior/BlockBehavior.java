@@ -28,13 +28,15 @@ import java.util.UUID;
 
 public final class BlockBehavior implements Listener {
 
-    private static BlockBehavior blockBehavior;
+    private static BlockBehavior instance;
     private static final Map<UUID, Long> placementCooldowns = new HashMap<>();
     private static final long COOLDOWN = 100;
 
     public static void register() {
-        if (blockBehavior == null) BlockBehavior.blockBehavior = new BlockBehavior();
-        Bukkit.getServer().getPluginManager().registerEvents(blockBehavior, PaperPlugin.getPlugin(PaperPlugin.class));
+        if (instance == null) {
+            BlockBehavior.instance = new BlockBehavior();
+            Bukkit.getServer().getPluginManager().registerEvents(instance, PaperPlugin.getPlugin(PaperPlugin.class));
+        }
     }
 
     @EventHandler
