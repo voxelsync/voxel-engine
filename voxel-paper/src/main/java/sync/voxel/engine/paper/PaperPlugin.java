@@ -48,8 +48,11 @@ public class PaperPlugin extends JavaPlugin {
         VoxelEngine.register(new PaperEngine());
         PacketEvents.getAPI().init();
         VanillaConverter.convert();
+
         BlockBehavior.register();
         EnchantmentBehavior.register();
+        ItemBehavior.register();
+
         Text.registerLangDirectory("https://voxelsync.github.io/translation/");
 
         VoxelEnchantment.forkEnchantment(VoxKey.of("voxel:vein_ming"));
