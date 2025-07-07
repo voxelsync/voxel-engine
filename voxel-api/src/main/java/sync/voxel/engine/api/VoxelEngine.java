@@ -10,7 +10,7 @@
 package sync.voxel.engine.api;
 
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.ApiStatus.*;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NonNull;
 import sync.voxel.engine.api.utils.item.VoxItem;
 
@@ -42,24 +42,24 @@ public final class VoxelEngine {
         return engine;
     }
 
-    @Internal
+    @ApiStatus.Internal
     public static void register(VoxEngine engine) {
         VoxelEngine.engine = engine;
     }
 
-    @Internal
+    @ApiStatus.Internal
     public static void unregister() {
         VoxelEngine.engine = null;
     }
 
-    @Internal
+    @ApiStatus.Internal
     private VoxelEngine() {
         throw new UnsupportedOperationException("This class cannot be instantiated.");
     }
 
     // ===== VO_ENGINE TUNNEL =====
 
-
+    @ApiStatus.Internal
     public static VoxItem voxItemTunnel(ItemStack stack) {
         return engine.voxItemTunnel(stack);
     }

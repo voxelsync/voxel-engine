@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.paper.PaperPlugin;
 import sync.voxel.engine.paper.runtime.enchantment.VoxelEnchantment;
@@ -33,6 +32,7 @@ public final class EnchantmentBehavior implements Listener {
         }
     }
 
+    @Deprecated(since = "1.0.0") // never use its final now
     public static void unregister() {
         if (instance != null) {
             instance = null;

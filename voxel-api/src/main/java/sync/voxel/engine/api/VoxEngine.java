@@ -10,8 +10,11 @@
 package sync.voxel.engine.api;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import sync.voxel.engine.api.utils.item.VoxItem;
 
 public interface VoxEngine {
+
+    @ApiStatus.Internal
     VoxItem voxItemTunnel(ItemStack stack);
 }
