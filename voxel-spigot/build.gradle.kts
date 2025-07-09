@@ -14,7 +14,7 @@ dependencies {
     implementation("org.leycm.frames:the-frame:1.3.15")
     implementation("com.github.retrooper:packetevents-spigot:2.8.0")
 
-    compileOnly("io.papermc.paper:paper-api:${project.properties["minecraft_version"]}-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:${project.properties["minecraft_version"]}-R0.1-SNAPSHOT")
 
     compileOnly("org.projectlombok:lombok:${project.properties["lombok_version"]}")
     annotationProcessor("org.projectlombok:lombok:${project.properties["lombok_version"]}")
