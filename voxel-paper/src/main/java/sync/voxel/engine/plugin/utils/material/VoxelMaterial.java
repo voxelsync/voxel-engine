@@ -19,8 +19,11 @@ import sync.voxel.engine.api.common.VoxKey;
 import sync.voxel.engine.api.common.VoxRenderType;
 import sync.voxel.engine.api.material.VoxMaterial;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -83,28 +86,69 @@ public class VoxelMaterial implements VoxMaterial {
     }
 
     @Override
-    public String getNameFor(@NotNull Player player) { // TODO : make a api for this and better system
-        String fileName = player.locale().toLanguageTag().replace("-", "_").toLowerCase();
-        String from = "item." + key.toString();
+    public String getNameFor(@NotNull Player player) {
+        // Log initial parameters
+        String playerName = player.getName();
+        String locale = player.locale().toLanguageTag();
+        System.out.println("Starting translation lookup for player: " + playerName + " with locale: " + locale);
+
+        String fileName = locale.replace("-", "_").toLowerCase();
+        String from = "item." + key.toString('.');
+        System.out.println("Formatted filename: " + fileName + ", translation key: " + from);
 
         try {
-            URL url = new URL("https://voxelsync.github.io/translation/minecraft/" + fileName + ".json");
+            String urlString = "https://voxelsync.github.io/translation/minecraft/" + fileName + ".json";
+            System.out.println("Attempting to connect to: " + urlString);
+
+            URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Accept", "application/json");
             connection.setConnectTimeout(2000);
             connection.setReadTimeout(2000);
 
-            if (connection.getResponseCode() == 200) {
+            System.out.println("Attempting to connect to: " + urlString + "Setting connection timeout to 2000ms");
+
+            long startTime = System.currentTimeMillis();
+            int responseCode = connection.getResponseCode();
+            long duration = System.currentTimeMillis() - startTime;
+
+            System.out.println("Attempting to connect to: " + urlString +"HTTP request completed. Response code: " + responseCode + ", took " + duration + "ms");
+
+            if (responseCode == 200) {
+                System.out.println("Attempting to connect to: " + urlString + "Successful response, reading data...");
                 try (InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
                     JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
+                    System.out.println("Received JSON data, size: " + json.size() + " entries");
+
                     if (json.has(from)) {
-                        return json.get(from).getAsString();
+                        String translation = json.get(from).getAsString();
+                        System.out.println("Found translation for key '" + from + "': " + translation);
+                        return translation;
+                    } else {
+                        System.out.println("Translation key '" + from + "' not found in JSON response");
                     }
                 }
+            } else {
+                System.out.println("HTTP request failed with code: " + responseCode);
+                try (InputStream errorStream = connection.getErrorStream()) {
+                    if (errorStream != null) {
+                        String errorResponse = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
+                        System.out.println("Error response body: " + errorResponse);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Could not read error stream" + e);
+                }
             }
-        } catch (Exception ignore) {}
+        } catch (MalformedURLException e) {
+            System.out.println("Malformed URL exception" + e);
+        } catch (IOException e) {
+            System.out.println("IO exception during translation lookup" + e);
+        } catch (Exception e) {
+            System.out.println("Unexpected exception during translation lookup" + e);
+        }
 
         // Fallback
+        System.out.println("Using fallback translation for key: " + key.identifier());
         return key.identifier();
     }
 
