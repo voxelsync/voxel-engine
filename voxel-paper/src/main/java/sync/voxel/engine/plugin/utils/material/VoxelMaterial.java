@@ -75,6 +75,32 @@ public class VoxelMaterial implements VoxMaterial {
     }
 
     @Override
+    public String getNameFor(@NotNull Player player) { // TODO : make a api for this and better system
+        String fileName = player.locale().toLanguageTag().replace("-", "_").toLowerCase();
+        String from = "item." + key.toString();
+
+        try {
+            URL url = new URL("https://voxelsync.github.io/translation/minecraft/" + fileName + ".json");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(2000);
+
+            if (connection.getResponseCode() == 200) {
+                try (InputStreamReader reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                    JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
+                    if (json.has(from)) {
+                        return json.get(from).getAsString();
+                    }
+                }
+            }
+        } catch (Exception ignore) {}
+
+        // Fallback
+        return key.namespace();
+    }
+
+    @Override
     public Material getVaMaterial() {
         return vaMaterial;
     }
