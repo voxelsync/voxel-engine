@@ -9,13 +9,21 @@
  */
 package sync.voxel.engine.plugin.utils.material;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.engine.api.common.VoxKey;
 import sync.voxel.engine.api.common.VoxRenderType;
 import sync.voxel.engine.api.material.VoxMaterial;
 
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -97,7 +105,7 @@ public class VoxelMaterial implements VoxMaterial {
         } catch (Exception ignore) {}
 
         // Fallback
-        return key.namespace();
+        return key.identifier();
     }
 
     @Override

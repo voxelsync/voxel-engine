@@ -1,12 +1,14 @@
 package sync.voxel.engine.plugin.runtime.command.subcommands;
 
 import net.kyori.adventure.text.Component;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
 import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.plugin.runtime.command.SubCommand;
 import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
@@ -33,13 +35,17 @@ public class TestSubCommand extends SubCommand {
 
     private void registerDefaultActions() {
         registerAction("test_block", player -> {
-            ItemStack block = createTestBlock();
+            ItemStack block = VoxelItem.edit(new ItemStack(Material.PAPER)).setVoMaterial(VoxMaterial.valueOf("voxel:test_block")).toNewItemStack();
             player.getInventory().addItem(block);
             player.sendMessage("§aDu hast einen Test-Block erhalten!");
         });
 
+        registerAction("getLang", player -> {
+
+            player.sendMessage("§aDeine Sprache ist [key=\"" + player.locale().toLanguageTag().replace("-", "_").toLowerCase() + "\", file=\"" + "\"]");
+        });
+
         registerAction("get_lore", player -> {
-            ItemStack block = createTestBlock();
             List<Component> lore = player.getActiveItem().lore() != null ? player.getActiveItem().lore() : new ArrayList<>();
             assert lore != null;
             player.sendMessage("ItemLore[");
@@ -56,11 +62,6 @@ public class TestSubCommand extends SubCommand {
             VoxelEnchantment.values().forEach(enchant -> player.sendMessage(enchant.getKey().toString()));
         });
     }
-
-    private @NotNull ItemStack createTestBlock() {
-        return VoxelItem.edit(new ItemStack(Material.PAPER)).setVoMaterial(VoxMaterial.valueOf("voxel:test_block")).toNewItemStack();
-    }
-
 
     @Override
     public void onIntialize(String[] args, CommandSender sender, Command command) {

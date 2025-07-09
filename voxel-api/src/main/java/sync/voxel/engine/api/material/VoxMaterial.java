@@ -10,6 +10,7 @@
 package sync.voxel.engine.api.material;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import sync.voxel.engine.api.common.VoxKey;
@@ -94,6 +95,9 @@ public interface VoxMaterial {
 
     // TODO : add docs
     VoxRenderType getRenderType();
+
+    // TODO : add docs
+    String getNameFor(@NotNull Player player);
 
     /**
      * Gets a specific setting value from this material's configuration.

@@ -21,6 +21,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +67,7 @@ public final class ItemBehavior implements PacketListener {
         WrapperPlayServerSetSlot wrapper = new WrapperPlayServerSetSlot(event);
         ItemStack packetItem = wrapper.getItem();
         org.bukkit.inventory.ItemStack stack = SpigotConversionUtil.toBukkitItemStack(packetItem).clone();
-        processItemToClient(stack).ifPresent(wrapper::setItem);
+        processItemToClient(stack, event.getPlayer()).ifPresent(wrapper::setItem);
     }
 
     private void handleWindowItems(PacketSendEvent event) {
@@ -76,7 +77,7 @@ public final class ItemBehavior implements PacketListener {
             ItemStack packetItem = items.get(i);
             org.bukkit.inventory.ItemStack stack = SpigotConversionUtil.toBukkitItemStack(packetItem).clone();
             int finalI = i;
-            processItemToClient(stack).ifPresent(newStack -> items.set(finalI, newStack));
+            processItemToClient(stack, event.getPlayer()).ifPresent(newStack -> items.set(finalI, newStack));
         }
     }
 
@@ -84,7 +85,7 @@ public final class ItemBehavior implements PacketListener {
         WrapperPlayClientClickWindow wrapper = new WrapperPlayClientClickWindow(event);
         ItemStack carriedItem = wrapper.getCarriedItemStack();
         org.bukkit.inventory.ItemStack stack = SpigotConversionUtil.toBukkitItemStack(carriedItem).clone();
-        processItemToServer(stack).ifPresent(newStack ->
+        processItemToServer(stack, event.getPlayer()).ifPresent(newStack ->
                 wrapper.setCarriedItemStack(SpigotConversionUtil.fromBukkitItemStack(newStack)));
     }
 
@@ -92,11 +93,11 @@ public final class ItemBehavior implements PacketListener {
         WrapperPlayClientCreativeInventoryAction wrapper = new WrapperPlayClientCreativeInventoryAction(event);
         ItemStack clickedItem = wrapper.getItemStack();
         org.bukkit.inventory.ItemStack stack = SpigotConversionUtil.toBukkitItemStack(clickedItem).clone();
-        processItemToServer(stack).ifPresent(newStack ->
+        processItemToServer(stack, event.getPlayer()).ifPresent(newStack ->
                 wrapper.setItemStack(SpigotConversionUtil.fromBukkitItemStack(newStack)));
     }
 
-    private Optional<ItemStack> processItemToClient(org.bukkit.inventory.@NotNull ItemStack stack) {
+    private Optional<ItemStack> processItemToClient(org.bukkit.inventory.@NotNull ItemStack stack, Player player) {
         if (stack.getType() == Material.AIR || Bukkit.getItemFactory().getItemMeta(stack.getType()) == null) {
             return Optional.empty();
         }
@@ -106,13 +107,13 @@ public final class ItemBehavior implements PacketListener {
         }
 
         VoxelItem item = VoxelItem.clone(stack);
-        applyName(item);
+        applyName(item, player);
         applyEnchantments(item);
 
         return Optional.of(SpigotConversionUtil.fromBukkitItemStack(item.toNewItemStack()));
     }
 
-    private Optional<org.bukkit.inventory.ItemStack> processItemToServer(org.bukkit.inventory.@NotNull ItemStack stack) {
+    private Optional<org.bukkit.inventory.ItemStack> processItemToServer(org.bukkit.inventory.@NotNull ItemStack stack, Player player) {
         if (stack.getType() == Material.AIR || !stack.hasItemMeta()) {
             return Optional.empty();
         }
@@ -123,7 +124,7 @@ public final class ItemBehavior implements PacketListener {
             return Optional.empty();
         }
 
-        revertName(item);
+        revertName(item, player);
         revertEnchantments(item);
 
         return Optional.of(item.toNewItemStack());
@@ -154,10 +155,10 @@ public final class ItemBehavior implements PacketListener {
         return false;
     }
 
-    private void applyName(@NotNull VoxelItem item){
+    private void applyName(@NotNull VoxelItem item, Player player){
         if (item.getDisplayName() != null) return;
 
-        String name = item.getVoMaterial().getKey().toString(); // TODO : add translations;
+        String name = item.getVoMaterial().getNameFor(player); // TODO : add translations;
         item.setDisplayName(Component.text(name, TextColor.color(0xFFFFFF)).decoration(TextDecoration.ITALIC, false)); // TODO : add rarity color + custom enchant to enchant name support
     }
 
@@ -185,13 +186,13 @@ public final class ItemBehavior implements PacketListener {
         item.setLore(lore);
     }
 
-    private void revertName(@NotNull VoxelItem item) {
+    private void revertName(@NotNull VoxelItem item, Player player) {
         if (item.getDisplayName() == null) return;
 
         String displayName = PlainTextComponentSerializer.plainText().serialize(item.getDisplayName());
-        String materialName = item.getVoMaterial().getKey().toString();
+        String systemName = item.getVoMaterial().getNameFor(player);
 
-        if (displayName.equals(materialName)) {
+        if (displayName.equals(systemName)) {
             item.setDisplayName(null);
         }
     }
