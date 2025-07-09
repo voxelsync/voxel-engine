@@ -25,8 +25,8 @@ import sync.voxel.engine.plugin.runtime.behavior.BlockBehavior;
 import sync.voxel.engine.plugin.runtime.behavior.EnchantmentBehavior;
 import sync.voxel.engine.plugin.runtime.behavior.ItemBehavior;
 import sync.voxel.engine.plugin.runtime.command.MainCommand;
-import sync.voxel.engine.plugin.runtime.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.runtime.material.VoxelMaterial;
+import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.utils.material.VoxelMaterial;
 import sync.voxel.engine.plugin.utils.text.Text;
 
 public class PaperPlugin extends JavaPlugin {

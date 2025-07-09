@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import sync.voxel.engine.api.utils.item.VoxItem;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.api.material.VoxMaterial;
-import sync.voxel.engine.plugin.runtime.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.runtime.material.VoxelMaterial;
+import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.utils.material.VoxelMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,18 +88,18 @@ public class VoxelItem implements VoxItem {
                     + ". This is likely caused by an item type that does not support meta, such as AIR.");
     }
 
-
     private void applyMeta() {
         stack.setItemMeta(meta);
     }
 
     private void updateLore() {
-        lore = meta.lore() != null ? meta.lore() : new ArrayList<>();
         updateMeta();
+        lore = meta.lore() != null ? meta.lore() : new ArrayList<>();
     }
 
     private void applyLore() {
         meta.lore(lore); applyMeta();
+        applyMeta();
     }
 
 

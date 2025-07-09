@@ -5,7 +5,6 @@ repositories {
     maven("https://leycm.github.io/repository")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 }
 
 

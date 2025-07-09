@@ -5,7 +5,6 @@ repositories {
     maven("https://leycm.github.io/repository")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
 }
 
 
@@ -14,7 +13,6 @@ dependencies {
     implementation("org.leycm.frames:the-frame:1.3.15")
 
     compileOnly("io.papermc.paper:paper-api:${project.properties["minecraft_version"]}-R0.1-SNAPSHOT")
-    compileOnly("org.spigotmc:spigot-api:${project.properties["minecraft_version"]}-SNAPSHOT")
 
     compileOnly("com.github.retrooper:packetevents-spigot:2.8.0")
 

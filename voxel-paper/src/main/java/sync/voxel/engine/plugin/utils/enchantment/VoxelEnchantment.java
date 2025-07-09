@@ -1,4 +1,4 @@
-package sync.voxel.engine.plugin.runtime.enchantment;
+package sync.voxel.engine.plugin.utils.enchantment;
 
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;

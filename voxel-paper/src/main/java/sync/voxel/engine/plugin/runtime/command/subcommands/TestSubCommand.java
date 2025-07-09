@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.plugin.runtime.command.SubCommand;
-import sync.voxel.engine.plugin.runtime.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
 import sync.voxel.engine.plugin.utils.item.VoxelItem;
 
 import java.util.ArrayList;

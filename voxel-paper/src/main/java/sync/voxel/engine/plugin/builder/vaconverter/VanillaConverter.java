@@ -6,8 +6,8 @@ import sync.voxel.engine.api.common.VoxKey;
 import sync.voxel.engine.api.common.VoxRenderType;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.api.material.VoxMaterial;
-import sync.voxel.engine.plugin.runtime.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.runtime.material.VoxelMaterial;
+import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.utils.material.VoxelMaterial;
 
 public class VanillaConverter {
 

@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.plugin.PaperPlugin;
-import sync.voxel.engine.plugin.runtime.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
 import sync.voxel.engine.plugin.utils.item.VoxelItem;
 
 import java.util.ArrayList;
