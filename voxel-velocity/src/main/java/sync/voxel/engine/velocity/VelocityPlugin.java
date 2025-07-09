@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 @Plugin(
         id = "voxel-velocity",
         name = "voxel-velocity",
-        version = BuildConstants.VERSION
+        version = "1.0.1"
 )
 public class VelocityPlugin {
 
