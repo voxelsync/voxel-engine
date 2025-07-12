@@ -21,14 +21,16 @@ import sync.voxel.engine.api.VoxelEngine;
 import sync.voxel.engine.api.common.VoxKey;
 import sync.voxel.engine.api.common.VoxRenderType;
 import sync.voxel.engine.plugin.builder.vaconverter.VanillaConverter;
+import sync.voxel.engine.plugin.common.logger.VoxLogger;
 import sync.voxel.engine.plugin.runtime.behavior.BlockBehavior;
 import sync.voxel.engine.plugin.runtime.behavior.EnchantmentBehavior;
 import sync.voxel.engine.plugin.runtime.behavior.ItemBehavior;
 import sync.voxel.engine.plugin.runtime.command.MainCommand;
-import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.utils.material.VoxelMaterial;
-import sync.voxel.engine.plugin.utils.text.Label;
+import sync.voxel.engine.plugin.common.registry.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.common.registry.material.VoxelMaterial;
 import sync.voxel.engine.plugin.utils.text.Text;
+
+import java.util.logging.Logger;
 
 public class PaperPlugin extends JavaPlugin {
 
@@ -57,6 +59,18 @@ public class PaperPlugin extends JavaPlugin {
 
         VoxelEnchantment.forkEnchantment(VoxKey.of("voxel:vein_ming"));
         VoxelMaterial.forkMaterial(Material.STONE, VoxKey.of("voxel:test_block"), VoxRenderType.BLOCK_TEXTURE_ID);
+
+        for (char c = 'A'; c <= 'Z'; c++) {
+            String s = String.valueOf(c);
+            VoxLogger logger = VoxLogger.registerLogger(s.toLowerCase());
+            logger.setIcon(c, 0x005BB7);
+            logger.announce(Component.text("Hallo das ist \""+ c + "\" lol"));
+            logger.info("info");
+            logger.debug("debug");
+            logger.warn("warn");
+        }
+
+
 
         MainCommand mainCommand = new MainCommand();
         mainCommand.registerSubCommands();

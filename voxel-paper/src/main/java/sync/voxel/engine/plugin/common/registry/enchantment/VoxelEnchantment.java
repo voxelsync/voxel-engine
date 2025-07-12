@@ -1,13 +1,15 @@
-package sync.voxel.engine.plugin.utils.enchantment;
+package sync.voxel.engine.plugin.common.registry.enchantment;
 
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.engine.api.common.VoxKey;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
+import sync.voxel.engine.plugin.utils.TranslationManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,6 +92,11 @@ public class VoxelEnchantment implements VoxEnchantment {
     @Override
     public VoxKey getKey() {
         return key;
+    }
+
+    @Override
+    public String getNameFor(@NotNull Player player) {
+        return TranslationManager.getNameFor(player, "item", key);
     }
 
     @Override

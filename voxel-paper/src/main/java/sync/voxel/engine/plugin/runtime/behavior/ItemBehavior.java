@@ -37,8 +37,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
-import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.utils.item.VoxelItem;
+import sync.voxel.engine.plugin.common.registry.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.common.item.VoxelItem;
 
 import java.util.*;
 
@@ -118,7 +118,7 @@ public final class ItemBehavior implements PacketListener {
 
         VoxelItem item = VoxelItem.clone(stack);
         applyName(item, player);
-        applyEnchantments(item);
+        applyEnchantments(item, player);
 
         return Optional.of(SpigotConversionUtil.fromBukkitItemStack(item.toNewItemStack()));
     }
@@ -135,7 +135,7 @@ public final class ItemBehavior implements PacketListener {
         }
 
         revertName(item);
-        revertEnchantments(item);
+        revertEnchantments(item, player);
 
         return Optional.of(item.toNewItemStack());
     }
@@ -174,7 +174,7 @@ public final class ItemBehavior implements PacketListener {
         item.setDisplayName(Component.text(name, TextColor.color(0xFFFFFF)).decoration(TextDecoration.ITALIC, false)); // TODO : add rarity color + custom enchant to enchant name support
     }
 
-    private void applyEnchantments(@NotNull VoxelItem item){
+    private void applyEnchantments(@NotNull VoxelItem item, Player player){
         List<Component> lore = item.getLore();
 
         List<VoxEnchantment> enchantments = new ArrayList<>(VoxEnchantment.values().stream().toList());
@@ -184,7 +184,7 @@ public final class ItemBehavior implements PacketListener {
             int level = item.getEnchantLevel(enchantment);
             if (level == 0) continue;
 
-            String name = enchantment.getKey().toString(); // TODO : add translations;
+            String name = enchantment.getNameFor(player); // TODO : add translations;
 
             Component line = Component.text(name + " " + VoxelEnchantment.getRomanInteger(level))
                     .color(TextColor.color(0xAAAAAA)).decoration(TextDecoration.ITALIC, false);
@@ -207,14 +207,14 @@ public final class ItemBehavior implements PacketListener {
 
     }
 
-    private void revertEnchantments(@NotNull VoxelItem item) {
+    private void revertEnchantments(@NotNull VoxelItem item, Player player) {
         List<Component> lore = item.getLore();
         if (lore == null || lore.isEmpty()) return;
 
         List<Component> newLore = new ArrayList<>(lore);
 
         for (VoxEnchantment enchantment : VoxEnchantment.values()) {
-            String enchantName = enchantment.getKey().toString();
+            String enchantName = enchantment.getNameFor(player);
             newLore.removeIf(line -> {
                 String lineText = PlainTextComponentSerializer.plainText().serialize(line);
                 return lineText.startsWith(enchantName + " ");

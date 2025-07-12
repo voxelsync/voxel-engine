@@ -10,6 +10,7 @@
 package sync.voxel.engine.api.enchantment;
 
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.engine.api.common.VoxKey;
 
@@ -85,6 +86,9 @@ public interface VoxEnchantment {
 
     // TODO : add docs
     VoxKey getKey();
+
+    // TODO : add docs
+    String getNameFor(@NotNull Player player);
 
     /**
      * Gets a specific setting value from this material's configuration.

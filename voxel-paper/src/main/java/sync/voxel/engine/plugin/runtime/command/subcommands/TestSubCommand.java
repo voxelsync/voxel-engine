@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.plugin.runtime.command.SubCommand;
-import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.utils.item.VoxelItem;
+import sync.voxel.engine.plugin.common.registry.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.common.item.VoxelItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;

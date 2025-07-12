@@ -29,7 +29,7 @@ import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.plugin.PaperPlugin;
 import sync.voxel.engine.plugin.runtime.world.VoxelBlock;
 import sync.voxel.engine.plugin.runtime.world.VoxelWorld;
-import sync.voxel.engine.plugin.utils.item.VoxelItem;
+import sync.voxel.engine.plugin.common.item.VoxelItem;
 
 import java.util.HashMap;
 import java.util.Map;

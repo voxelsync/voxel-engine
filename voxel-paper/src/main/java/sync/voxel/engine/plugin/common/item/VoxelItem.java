@@ -7,7 +7,7 @@
  * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
  * Copyright (c) contributors
  */
-package sync.voxel.engine.plugin.utils.item;
+package sync.voxel.engine.plugin.common.item;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import sync.voxel.engine.api.utils.item.VoxItem;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.api.material.VoxMaterial;
-import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
-import sync.voxel.engine.plugin.utils.material.VoxelMaterial;
+import sync.voxel.engine.plugin.common.registry.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.common.registry.material.VoxelMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class VoxelItem implements VoxItem {
     private void updateMeta() {
         meta = stack.getItemMeta();
         if (meta == null) throw new IllegalStateException("ItemMeta is null for item type: " + stack.getType()
-                    + ". This is likely caused by an item type that does not support meta, such as AIR.");
+                    + ". This is likely caused by an item type that does not support meta, such as AIR, WATER, LAVA.");
     }
 
     private void applyMeta() {

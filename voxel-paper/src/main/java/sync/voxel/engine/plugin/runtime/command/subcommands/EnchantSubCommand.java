@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
 import sync.voxel.engine.plugin.runtime.command.SubCommand;
-import sync.voxel.engine.plugin.utils.enchantment.VoxelEnchantment;
+import sync.voxel.engine.plugin.common.registry.enchantment.VoxelEnchantment;
 import sync.voxel.engine.plugin.utils.ConvertUtils;
-import sync.voxel.engine.plugin.utils.item.VoxelItem;
+import sync.voxel.engine.plugin.common.item.VoxelItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -12,7 +12,7 @@ package sync.voxel.engine.plugin;
 import org.bukkit.inventory.ItemStack;
 import sync.voxel.engine.api.VoxEngine;
 import sync.voxel.engine.api.utils.item.VoxItem;
-import sync.voxel.engine.plugin.utils.item.VoxelItem;
+import sync.voxel.engine.plugin.common.item.VoxelItem;
 
 public class PaperEngine implements VoxEngine {
 
