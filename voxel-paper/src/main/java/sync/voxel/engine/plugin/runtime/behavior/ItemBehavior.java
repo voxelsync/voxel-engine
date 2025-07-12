@@ -1,3 +1,12 @@
+/**
+ * VOXEL-LICENSE NOTICE
+ * <br><br>
+ * This software is part of VoxelSync under the Voxel Public License. <br>
+ * Source at: <a href="https://github.com/voxelsync/voxel/blob/main/LICENSE">GITHUB</a>
+ * <br><br>
+ * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
+ * Copyright (c) contributors
+ */
 package sync.voxel.engine.plugin.runtime.behavior;
 
 import com.github.retrooper.packetevents.PacketEvents;
@@ -24,6 +33,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import sync.voxel.engine.api.enchantment.VoxEnchantment;
@@ -124,7 +134,7 @@ public final class ItemBehavior implements PacketListener {
             return Optional.empty();
         }
 
-        revertName(item, player);
+        revertName(item);
         revertEnchantments(item);
 
         return Optional.of(item.toNewItemStack());
@@ -156,9 +166,11 @@ public final class ItemBehavior implements PacketListener {
     }
 
     private void applyName(@NotNull VoxelItem item, Player player){
+        item.setPersistentData("voxel-meta", "has-modified-name", PersistentDataType.BOOLEAN, false);
         if (item.getDisplayName() != null) return;
 
         String name = item.getVoMaterial().getNameFor(player); // TODO : add translations;
+        item.setPersistentData("voxel-meta", "has-modified-name", PersistentDataType.BOOLEAN, true);
         item.setDisplayName(Component.text(name, TextColor.color(0xFFFFFF)).decoration(TextDecoration.ITALIC, false)); // TODO : add rarity color + custom enchant to enchant name support
     }
 
@@ -186,15 +198,13 @@ public final class ItemBehavior implements PacketListener {
         item.setLore(lore);
     }
 
-    private void revertName(@NotNull VoxelItem item, Player player) {
+    private void revertName(@NotNull VoxelItem item) {
         if (item.getDisplayName() == null) return;
 
-        String displayName = PlainTextComponentSerializer.plainText().serialize(item.getDisplayName());
-        String systemName = item.getVoMaterial().getNameFor(player);
-
-        if (displayName.equals(systemName)) {
+        if (Boolean.TRUE.equals(item.getPersistentData("voxel-meta", "has-modified-name", PersistentDataType.BOOLEAN))) {
             item.setDisplayName(null);
         }
+
     }
 
     private void revertEnchantments(@NotNull VoxelItem item) {

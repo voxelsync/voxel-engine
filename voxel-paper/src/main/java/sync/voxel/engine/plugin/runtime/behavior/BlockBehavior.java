@@ -1,3 +1,12 @@
+/**
+ * VOXEL-LICENSE NOTICE
+ * <br><br>
+ * This software is part of VoxelSync under the Voxel Public License. <br>
+ * Source at: <a href="https://github.com/voxelsync/voxel/blob/main/LICENSE">GITHUB</a>
+ * <br><br>
+ * Copyright (c) Ley <cm.ley.cm@gmail.com> <br>
+ * Copyright (c) contributors
+ */
 package sync.voxel.engine.plugin.runtime.behavior;
 
 import org.bukkit.*;
@@ -13,7 +22,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
+
 import org.jetbrains.annotations.NotNull;
+
 import sync.voxel.engine.api.material.VoxMaterial;
 import sync.voxel.engine.plugin.PaperPlugin;
 import sync.voxel.engine.plugin.runtime.world.VoxelBlock;
@@ -41,7 +52,12 @@ public final class BlockBehavior implements Listener {
     public void onBlockBreak(@NotNull BlockBreakEvent event) {
         updateVoxelBlockNeighbor(event.getBlock().getLocation(), event.getBlock().getLocation(), 1); // TODO : add radius to config
         if (VoxelWorld.containsVoxelBlock(event.getBlock().getLocation())) {
-            VoxelWorld.getVoxelBlock(event.getBlock().getLocation()).breakBlock(1);
+            int dropChance = 1;
+
+            if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) dropChance = 0;
+
+            VoxelWorld.getVoxelBlock(event.getBlock().getLocation()).breakBlock(dropChance, event.getPlayer());
+            event.setDropItems(false);
         }
     }
 

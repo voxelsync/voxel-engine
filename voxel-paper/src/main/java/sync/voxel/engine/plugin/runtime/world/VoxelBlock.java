@@ -1,14 +1,19 @@
 package sync.voxel.engine.plugin.runtime.world;
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import lombok.Getter;
 import lombok.Setter;
+
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
+
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Random;
@@ -30,7 +35,11 @@ public class VoxelBlock {
 
         this.location = location;
         this.offset = getBestOffset(null);
-        this.stack = stack.clone();
+
+        this.stack = new ItemStack(stack.getType());
+        this.stack.setData(DataComponentTypes.CUSTOM_MODEL_DATA, stack.getData(DataComponentTypes.CUSTOM_MODEL_DATA));
+        this.stack.editMeta(meta -> meta.displayName(stack.displayName()));
+
         this.stack.setAmount(1);
         this.display = location.getWorld().spawn(location, ItemDisplay.class, i -> updateDisplay(i, null));
 
@@ -56,13 +65,15 @@ public class VoxelBlock {
         ));
     }
 
-    public void breakBlock(double chancePercent) {
+    public void breakBlock(double chancePercent, @NotNull Player player) {
         VoxelWorld.removeVoxelBlock(this);
-
         display.remove();
 
+        // === Drop item ===
+        if (player.getGameMode().equals(GameMode.CREATIVE)) chancePercent = 0;
+
         if (new Random().nextFloat() <= chancePercent) {
-            Item dropped = location.getWorld().dropItem(location.add(0.5, 0.5, 0.5), stack);
+            Item dropped = location.getWorld().dropItemNaturally(location.add(0.5, 0.5, 0.5), stack);
             dropped.setVelocity(new Vector(0, 0.2, 0));
         }
     }

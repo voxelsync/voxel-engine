@@ -119,7 +119,7 @@ subprojects {
 
     // Development JAR deployment
     tasks.register("deployDevJar") {
-        dependsOn("jar")
+        dependsOn("deployJar")
 
         doLast {
             val jarTask = tasks.getByName<Jar>("jar")
@@ -152,7 +152,7 @@ subprojects {
 
     // Alpha JAR deployment
     tasks.register("deployAlphaJar") {
-        dependsOn("jar")
+        dependsOn("deployJar")
 
         doLast {
             val jarTask = tasks.getByName<Jar>("jar")
@@ -185,7 +185,7 @@ subprojects {
 
     // Release JAR deployment
     tasks.register("deployReleaseJar") {
-        dependsOn("jar")
+        dependsOn("deployJar")
 
         doLast {
             val jarTask = tasks.getByName<Jar>("jar")
