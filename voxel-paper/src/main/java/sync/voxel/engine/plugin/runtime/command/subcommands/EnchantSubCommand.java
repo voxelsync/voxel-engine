@@ -22,7 +22,7 @@ import static sync.voxel.engine.plugin.PaperPlugin.prefix;
 public class EnchantSubCommand extends SubCommand {
 
     @Override
-    public void onIntialize(String[] args, CommandSender sender, Command command) {
+    public void execute(String[] args, CommandSender sender, Command command) {
         if (args.length < 1) {
             sender.sendMessage(prefix.append(Component.text("§cYou have to specify a Action <- exception in argument 2")));
             return;
@@ -113,7 +113,7 @@ public class EnchantSubCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getTabCompleter(String @NotNull [] args, CommandSender sender, Command command) {
+    public List<String> tabComplete(String[] args, CommandSender sender, Command command) {
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             list.add("getBook");
@@ -128,8 +128,8 @@ public class EnchantSubCommand extends SubCommand {
         if (args.length == 3) {
             if (Arrays.asList("getbook", "add").contains(args[0].toLowerCase())) {
                 if (VoxEnchantment.valueOf(args[1]) != null) {
-                    for (Integer i = 0; i < VoxEnchantment.valueOf(args[1]).getAttribute("max_level", Integer.class, 1)+1; i++) {
-                        list.add(i.toString());
+                    for (int i = 0; i < VoxEnchantment.valueOf(args[1]).getAttribute("max_level", Integer.class, 1)+1; i++) {
+                        list.add(Integer.toString(i));
                     }
                 }
             }

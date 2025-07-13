@@ -20,9 +20,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import sync.voxel.engine.api.material.VoxMaterial;
@@ -64,6 +66,12 @@ public final class BlockBehavior implements Listener {
     @EventHandler
     public void onBlockPlace(@NotNull BlockPlaceEvent event) {
         updateVoxelBlockNeighbor(event.getBlock().getLocation(), null, 1); // TODO : add radius to config
+    }
+
+    @Contract(pure = true)
+    @EventHandler
+    public void onItemCopy(@NotNull PlayerItemHeldEvent event) {
+
     }
 
     @EventHandler

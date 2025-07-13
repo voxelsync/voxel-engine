@@ -1,11 +1,24 @@
 plugins {
     java
+    `maven-publish`
 }
 
 rootProject.version = "1.0.1"
 
 subprojects {
     apply(plugin = "java")
+    apply(plugin = "maven-publish")
+
+    publishing {
+        publications.create<MavenPublication>("maven") {
+            from(components["java"])
+
+            groupId = "sync.voxel.engine."
+            artifactId = description
+            version = rootProject.version as String?
+        }
+
+    }
 
     fun getVersionCounterFile(type: String): File {
         return file("${rootProject.rootDir}/.idea/version-counters/${project.name}-${type}.txt")
