@@ -64,7 +64,7 @@ public class TestSubCommand extends SubCommand {
     }
 
     @Override
-    public void onIntialize(String[] args, CommandSender sender, Command command) {
+    public void execute(String[] args, CommandSender sender, Command command) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("§cNur Spieler können diesen Befehl nutzen!");
             return;
@@ -86,7 +86,7 @@ public class TestSubCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getTabCompleter(String[] args, CommandSender sender, Command command) {
+    public List<String> tabComplete(String @NotNull [] args, CommandSender sender, Command command) {
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             for (String string : actions.keySet()) {

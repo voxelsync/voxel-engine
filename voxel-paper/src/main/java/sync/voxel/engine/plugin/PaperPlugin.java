@@ -15,6 +15,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import sync.voxel.engine.api.VoxelEngine;
@@ -36,7 +37,7 @@ public class PaperPlugin extends JavaPlugin {
 
     public static PaperPlugin plugin;
     public static Component prefix = Component.text("V").color(TextColor.color(0xff0241)).append(Component.text("E").color(TextColor.color(0x00244f)).append(Component.text(" »").color(TextColor.color(0x555555)))) ;
-
+    public static VoxLogger logger = VoxLogger.getOrCreate("voxel-engine");
 
     @Override
     public void onLoad() {
@@ -46,6 +47,9 @@ public class PaperPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        logger.setIcon('E', 0x0000FF);
+        logger.setPrefix(Component.text("Engine", TextColor.color(0x0000FF)));
+
         PaperPlugin.plugin = this;
         VoxelEngine.register(new PaperEngine());
         PacketEvents.getAPI().init();
@@ -60,22 +64,7 @@ public class PaperPlugin extends JavaPlugin {
         VoxelEnchantment.forkEnchantment(VoxKey.of("voxel:vein_ming"));
         VoxelMaterial.forkMaterial(Material.STONE, VoxKey.of("voxel:test_block"), VoxRenderType.BLOCK_TEXTURE_ID);
 
-        for (char c = 'A'; c <= 'Z'; c++) {
-            String s = String.valueOf(c);
-            VoxLogger logger = VoxLogger.registerLogger(s.toLowerCase());
-            logger.setIcon(c, 0x005BB7);
-            logger.announce(Component.text("Hallo das ist \""+ c + "\" lol"));
-            logger.info("info");
-            logger.debug("debug");
-            logger.warn("warn");
-        }
-
-
-
         MainCommand mainCommand = new MainCommand();
-        mainCommand.registerSubCommands();
-        getCommand("voxelengine").setExecutor(mainCommand);
-        getCommand("voxelengine").setTabCompleter(mainCommand);
     }
 
     @Override

@@ -22,13 +22,9 @@ public abstract class SubCommand {
         MainCommand.registerSubCommand(this);
     }
 
-    public abstract void onIntialize(String[] args, CommandSender sender, Command command);
+    public abstract void execute(String[] args, CommandSender sender, Command command);
 
-    public abstract List<String> getTabCompleter(String[] args, CommandSender sender, Command command);
-
-    public final void intialize(String[] args, CommandSender sender, Command command) {
-        onIntialize(args, sender, command);
-    }
+    public abstract List<String> tabComplete(String[] args, CommandSender sender, Command command);
 
     public String getKey() {
         return key;
