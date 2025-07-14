@@ -9,17 +9,6 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "maven-publish")
 
-    publishing {
-        publications.create<MavenPublication>("maven") {
-            from(components["java"])
-
-            groupId = "sync.voxel.engine."
-            artifactId = description
-            version = rootProject.version as String?
-        }
-
-    }
-
     fun getVersionCounterFile(type: String): File {
         return file("${rootProject.rootDir}/.idea/version-counters/${project.name}-${type}.txt")
     }
@@ -62,6 +51,17 @@ subprojects {
             "paper" -> "VoxelEngine"
             else -> "VoxelEngine${project.name.capitalize()}"
         }
+    }
+
+    publishing {
+        publications.create<MavenPublication>("maven") {
+            from(components["java"])
+
+            groupId = "sync.voxel.engine."
+            artifactId = description
+            version = rootProject.version as String?
+        }
+
     }
 
     tasks.named<Jar>("jar") {
