@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     if (project.name != "api") implementation(project(":api"))
+    if (project.name != "api" && project.name != "common") implementation(project(":api"))
     implementation("org.leycm.frames:the-frame:1.3.15")
     implementation("com.github.retrooper:packetevents-spigot:2.8.0")
 
